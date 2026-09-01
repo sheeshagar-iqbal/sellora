@@ -11,15 +11,24 @@ const home =asyncerror(async(req,res)=>{
 })
 
 const signup =(async(req,res)=>{
-    const {password} = await userModel.create(req.body)
-    bcrypt.hash(password,10)
-    res.status(201).json(user)
+    const {name,email,password} = await userModel.create(req.body)
+
+    const hashpass = await bcrypt.hash(password,10)
+    res.status(201).json({name,email,password:hashpass})
 })
 
-// const signup =(async(req,res)=>{
-//     const user =  userModel.create(req.body)
-//     res.json(user)
-// })
+const  login =(async(req,res)=>{
+    const {email,password}=req.body
+    const data = await userModel.findOne({email})
+    const comp = await bcrypt.compare(password,data.password)
+    if(!comp){
+        res.json("user not found")
+    }else{
+        res.json("user not found")
+
+    }
+    res.json(user)
+})
 
 
-module.exports ={signup,home}
+module.exports ={signup,home,login}
