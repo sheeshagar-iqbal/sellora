@@ -3,8 +3,12 @@ const app = express()
 require("dotenv").config()
 const logger =require("morgan")
 const router = require("./routes/user.route")
-const Errorhandler = require("./config/Errorhandler")
+const Errorhandler = require("./middleware/Errorhandler")
+// db connected
+require('./config/db')
 app.use(logger("tiny"))
+app.use(express.json())
+app.use(express.urlencoded({extended:false}))
 // routes
 app.use(router)
 app.use((req,res,next)=>{
@@ -13,7 +17,9 @@ app.use((req,res,next)=>{
 
 app.use((err,req,res,next)=>{
     const statuscode = err.statuscode ||500
-
+    if(err.name==="MongoServerError" && err.message.includes("E11000 duplicate key")){
+        err.message='user with this email address already exists'
+    }
     res.status(statuscode).json({
         message:err.message,
         errName:err.name,
