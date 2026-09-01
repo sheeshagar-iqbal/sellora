@@ -157,9 +157,9 @@ const Signup = () => {
 
             <TextField
               fullWidth
-              label="City"
-              name="city"
-              value={formData.city}
+              label="Address"
+              name="address"
+              value={formData.address}
               onChange={changeHandler}
               margin="normal"
             />

@@ -23,7 +23,7 @@ const userSchema = new mongoose.Schema(
     password: {
       type: String,
       required: true,
-      select :false,
+      // select :false,
       // match:[]
     },
 
@@ -35,7 +35,7 @@ const userSchema = new mongoose.Schema(
       type: String,
     },
 
-    city: {
+    address: {
       type: String,
     },
   },
