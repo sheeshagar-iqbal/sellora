@@ -1,3 +1,5 @@
+const mongoose =require('mongoose')
+
 const productSchema = new mongoose.Schema(
   {
     title: {
@@ -39,9 +41,13 @@ const productSchema = new mongoose.Schema(
 
     seller: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
+      ref: "user",
+      // required: true,
     },
   },
   { timestamps: true }
 );
+
+
+const productmodel= mongoose.model('product',productSchema)
+module.exports=productmodel

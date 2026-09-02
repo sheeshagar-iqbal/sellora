@@ -4,72 +4,129 @@ import {
   CardMedia,
   CardContent,
   Typography,
-  IconButton,
   Box,
+  Chip,
 } from "@mui/material";
-
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
+import { useNavigate } from "react-router-dom";
 
 const ProductCards = ({ product }) => {
+  const navigate = useNavigate();
+
+  const imageUrl = product?.images?.[0]
+    ? `http://localhost:3000/upload/${product.images[0]}`
+    : "https://via.placeholder.com/400x250?text=No+Image";
+
   return (
     <Card
+      onClick={() => navigate(`/product/${product?._id}`)}
       sx={{
         borderRadius: 3,
         overflow: "hidden",
-        height: "100%",
         cursor: "pointer",
-        transition: "0.3s",
+        height: "100%",
+        transition: "all 0.3s ease",
+
         "&:hover": {
           transform: "translateY(-5px)",
-          boxShadow: 5,
+          boxShadow: 6,
         },
       }}
     >
+      {/* IMAGE */}
       <Box sx={{ position: "relative" }}>
         <CardMedia
           component="img"
           height="220"
-          image={product?.image}
+          image={imageUrl}
           alt={product?.title}
-          sx={{ objectFit: "cover" }}
+          sx={{
+            objectFit: "cover",
+          }}
         />
 
-        <IconButton
-          sx={{
-            position: "absolute",
-            right: 10,
-            top: 10,
-            background: "white",
-          }}
-        >
-          <FavoriteBorderIcon />
-        </IconButton>
+        {product?.condition && (
+          <Chip
+            label={product.condition}
+            size="small"
+            sx={{
+              position: "absolute",
+              top: 12,
+              left: 12,
+              backgroundColor: "white",
+              fontWeight: 600,
+            }}
+          />
+        )}
       </Box>
 
-      <CardContent>
-        <Typography variant="h6" fontWeight="bold">
-          ₹{product?.price}
-        </Typography>
+      {/* CONTENT */}
+      <CardContent sx={{ p: 2 }}>
 
-        <Typography
-          variant="body1"
+        {/* ROW 1 */}
+        <Box
           sx={{
-            whiteSpace: "nowrap",
-            overflow: "hidden",
-            textOverflow: "ellipsis",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            mb: 1,
           }}
         >
-          {product?.title}
-        </Typography>
+          <Typography
+            variant="h6"
+            fontWeight={700}
+          >
+            ₹{Number(product?.price || 0).toLocaleString("en-IN")}
+          </Typography>
 
-        <Box display="flex" alignItems="center" mt={1}>
-          <LocationOnOutlinedIcon fontSize="small" />
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{
+              maxWidth: "45%",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+            }}
+          >
+            {product?.category}
+          </Typography>
+        </Box>
 
-          <Typography variant="body2" color="text.secondary">
+        {/* ROW 2 */}
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <Typography
+            variant="body1"
+            fontWeight={500}
+            sx={{
+              maxWidth: "55%",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+            }}
+          >
+            {product?.title}
+          </Typography>
+
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{
+              maxWidth: "40%",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+            }}
+          >
             {product?.location}
           </Typography>
         </Box>
+
       </CardContent>
     </Card>
   );
