@@ -7,8 +7,9 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-
-import { Link } from "react-router-dom";
+import TextareaAutosize from "@mui/material/TextareaAutosize";
+import axios from 'axios'
+import { Link, useNavigate } from "react-router-dom";
 
 const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -18,9 +19,9 @@ const Signup = () => {
     email: "",
     password: "",
     phone: "",
-    city: "",
+    address: "",
   });
-
+  const navigate =useNavigate()
   const changeHandler = (e) => {
     setFormData({
       ...formData,
@@ -30,8 +31,12 @@ const Signup = () => {
 
   const submitHandler = (e) => {
     e.preventDefault();
-
-    console.log(formData);
+    axios.post('http://localhost:3000/user/signup',formData)
+    .then((res)=>{alert('data inserted')
+    console.log(res.data);
+    navigate('/login')
+    })
+    .catch((err)=>console.log(err)    )
   };
 
   return (
@@ -64,20 +69,14 @@ const Signup = () => {
               Create Your Account
             </Typography>
 
-            <Typography
-              color="text.secondary"
-              sx={{ mt: 1 }}
-            >
+            <Typography color="text.secondary" sx={{ mt: 1 }}>
               Join Sellora and start buying & selling
             </Typography>
           </Box>
 
           {/* Form */}
 
-          <Box
-            component="form"
-            onSubmit={submitHandler}
-          >
+          <Box component="form" onSubmit={submitHandler}>
             {/* Name */}
 
             <TextField
@@ -128,16 +127,12 @@ const Signup = () => {
               <Button
                 type="button"
                 size="small"
-                onClick={() =>
-                  setShowPassword(!showPassword)
-                }
+                onClick={() => setShowPassword(!showPassword)}
                 sx={{
                   textTransform: "none",
                 }}
               >
-                {showPassword
-                  ? "Hide Password"
-                  : "Show Password"}
+                {showPassword ? "Hide Password" : "Show Password"}
               </Button>
             </Box>
 
@@ -164,6 +159,19 @@ const Signup = () => {
               margin="normal"
             />
 
+            {/* <TextareaAutosize
+              aria-label="minimum height"
+              minRows={3}
+              placeholder="Address"
+              style={{ width: '100%' }}
+              fullWidth
+              label="Address"
+              name="address"
+              value={formData.address}
+              onChange={changeHandler}
+              // margin="normal"
+            /> */}
+
             {/* Signup */}
 
             <Button
@@ -186,13 +194,8 @@ const Signup = () => {
 
           {/* Login */}
 
-          <Typography
-            textAlign="center"
-            mt={3}
-            color="text.secondary"
-          >
+          <Typography textAlign="center" mt={3} color="text.secondary">
             Already have an account?{" "}
-
             <Link
               to="/login"
               style={{

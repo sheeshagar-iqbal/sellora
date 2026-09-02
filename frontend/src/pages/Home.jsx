@@ -10,6 +10,9 @@ import {
 import SearchBar from "../components/SearchBar";
 import Category from "../components/Category";
 import ProductCards from "../components/ProductCards";
+import axios from "axios";
+import { useEffect } from "react";
+import { useState } from "react";
 
 const products = [
   {
@@ -43,70 +46,95 @@ const products = [
 ];
 
 const Home = () => {
+  const [userdata,setUserdata]=useState()
+  function  getuser(){
+   axios.get('http://localhost:3000/user',{
+      headers:{
+        authorization:localStorage.getItem('token')
+      }
+    }).then((res)=>{
+    console.log(res.data);
+    setUserdata(res.data)
+  
+    })
+    .catch((err)=>console.log(err)    )
+  }
+  
+  useEffect(()=>{
+    getuser()
+  },[])
+
   return (
-    <>
-      {/* Hero */}
-      <Box
-        sx={{
-          py: 8,
-          textAlign: "center",
-          background:
-            "linear-gradient(135deg, #eef7ff 0%, #f5fff2 100%)",
-        }}
-      >
-        <Typography
-          variant="h2"
-          fontWeight="bold"
-          sx={{ color: "#102A43" }}
-        >
-          Find What You Need
-        </Typography>
+     <div>
+      <h1>{userdata}</h1>
+      <p>
+         Lorem ipsum dolor sit amet, consectetur adipisicing elit. Repellendus, quo illo ipsa nihil alias cupiditate quod corporis inventore hic deserunt reprehenderit! Labore numquam mollitia reiciendis similique quaerat architecto? Nemo, repudiandae?
+      </p>
+     </div>
 
-        <Typography
-          variant="h6"
-          color="text.secondary"
-          sx={{ mt: 1, mb: 4 }}
-        >
-          Buy • Sell • Discover
-        </Typography>
+    // <>
+    //   {/* Hero */}
+    //   <Box
+    //     sx={{
+    //       py: 8,
+    //       textAlign: "center",
+    //       background:
+    //         "linear-gradient(135deg, #eef7ff 0%, #f5fff2 100%)",
+    //     }}
+    //   >
+    //     <Typography
+    //       variant="h2"
+    //       fontWeight="bold"
+    //       sx={{ color: "#102A43" }}
+    //     >
+    //       Find What You Need
+    //     </Typography>
 
-        <SearchBar />
-      </Box>
+    //     <Typography
+    //       variant="h6"
+    //       color="text.secondary"
+    //       sx={{ mt: 1, mb: 4 }}
+    //     >
+    //       Buy • Sell • Discover
+    //     </Typography>
 
-      <Container maxWidth="xl" sx={{ py: 5 }}>
-        {/* Categories */}
-        <Typography variant="h5" fontWeight="bold" mb={3}>
-          Browse Categories
-        </Typography>
+    //     <SearchBar />
+    //   </Box>
 
-        <Category />
+    //   <Container maxWidth="xl" sx={{ py: 5 }}>
+    //     {/* Categories */}
+    //     <Typography variant="h5" fontWeight="bold" mb={3}>
+    //       Browse Categories
+    //     </Typography>
 
-        {/* Products */}
-        <Box
-          display="flex"
-          justifyContent="space-between"
-          alignItems="center"
-          mt={6}
-          mb={3}
-        >
-          <Typography variant="h5" fontWeight="bold">
-            Fresh Recommendations
-          </Typography>
+    //     <Category />
 
-          <Button>
-            View All
-          </Button>
-        </Box>
+    //     {/* Products */}
+    //     <Box
+    //       display="flex"
+    //       justifyContent="space-between"
+    //       alignItems="center"
+    //       mt={6}
+    //       mb={3}
+    //     >
+    //       <Typography variant="h5" fontWeight="bold">
+    //         Fresh Recommendations
+    //       </Typography>
 
-        <Grid container spacing={3}>
-          {products.map((product) => (
-            <Grid item xs={12} sm={6} md={4} lg={3} key={product.id}>
-              <ProductCards product={product} />
-            </Grid>
-          ))}
-        </Grid>
-      </Container>
-    </>
+    //       <Button>
+    //         View All
+    //       </Button>
+    //     </Box>
+
+    //     <Grid container spacing={3}>
+    //       {products.map((product) => (
+    //         <Grid item xs={12} sm={6} md={4} lg={3} key={product.id}>
+    //           <ProductCards product={product} />
+    //         </Grid>
+    //       ))}
+    //     </Grid>
+    //   </Container>
+    // </>
   );
 };
 

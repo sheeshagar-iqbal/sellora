@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -26,10 +27,14 @@ const Login = () => {
     });
   };
 
-  const submitHandler = (e) => {
+  const submitHandler = async (e) => {
     e.preventDefault();
-
-    console.log(formData);
+    const res= await axios.post('http://localhost:3000/user/login',formData)
+     console.log(res.data.token);
+     localStorage.setItem('token',res.data.token)
+     
+   
+    // console.log(formData);
   };
 
   return (

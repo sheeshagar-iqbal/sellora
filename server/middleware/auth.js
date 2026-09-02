@@ -1,42 +1,53 @@
 const jwt = require("jsonwebtoken");
-const Errorhandler = require("../utils/Errorhandler");
+// const Errorhandler = require("../utils/Errorhandler");
+require('dotenv').config()
+// const auth = async (req, res, next) => {
+//   try {
+//     // 1. Get token from Authorization header
 
-const auth = async (req, res, next) => {
-  try {
-    // 1. Get token from Authorization header
+//     const authHeader = req.headers.authorization;
 
-    const authHeader = req.headers.authorization;
+//     if (!authHeader || !authHeader.startsWith("Bearer ")) {
+//       return next(
+//         new Errorhandler("Please login first", 401)
+//       );
+//     }
 
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return next(
-        new Errorhandler("Please login first", 401)
-      );
-    }
+//     // 2. Extract token
 
-    // 2. Extract token
+//     const token = authHeader.split(" ")[1];
 
-    const token = authHeader.split(" ")[1];
+//     // 3. Verify token
 
-    // 3. Verify token
+//     const decoded = jwt.verify(
+//       token,
+//       process.env.JWT_SECRET
+//     );
 
-    const decoded = jwt.verify(
-      token,
-      process.env.JWT_SECRET
-    );
+//     // 4. Store decoded user information
 
-    // 4. Store decoded user information
+//     req.user = decoded;
 
-    req.user = decoded;
+//     // 5. Continue to next controller
 
-    // 5. Continue to next controller
+//     next();
 
-    next();
+//   } catch (error) {
+//     return next(
+//       new Errorhandler("Invalid or expired token", 401)
+//     );
+//   }
+// };
 
-  } catch (error) {
-    return next(
-      new Errorhandler("Invalid or expired token", 401)
-    );
-  }
-};
+
+const auth = (req,res,next)=>{
+    const token = req.headers.authorization
+    let verified =jwt.verify(token,process.env.JWT_SECRET)
+    console.log(verified);
+    userdata =verified
+
+    next()
+    
+}
 
 module.exports = auth;

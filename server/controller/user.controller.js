@@ -8,8 +8,9 @@ const userModel = require("../models/user.model");
 const bcrypt = require("bcrypt");
 const jwt =require('jsonwebtoken')
 require('dotenv').config()
+
 const home = asyncerror(async (req, res) => {
-  res.json("login");
+  res.json("home");
 });
 
 const signup = async (req, res) => {
