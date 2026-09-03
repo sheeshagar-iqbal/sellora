@@ -14,36 +14,6 @@ import axios from "axios";
 import { useEffect } from "react";
 import { useState } from "react";
 
-// const products = [
-//   {
-//     id: 1,
-//     title: "iPhone 15",
-//     price: "55000",
-//     location: "Mumbai",
-//     image: "https://images.unsplash.com/photo-1592899677977-9c10ca588bbd",
-//   },
-//   {
-//     id: 2,
-//     title: "Royal Enfield Classic",
-//     price: "120000",
-//     location: "Bhopal",
-//     image: "https://images.unsplash.com/photo-1558981806-ec527fa84c39",
-//   },
-//   {
-//     id: 3,
-//     title: "HP Laptop",
-//     price: "45000",
-//     location: "Delhi",
-//     image: "https://images.unsplash.com/photo-1496181133206-80ce9b88a853",
-//   },
-//   {
-//     id: 4,
-//     title: "Modern Sofa",
-//     price: "18000",
-//     location: "Indore",
-//     image: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc",
-//   },
-// ];
 
 const Home = () => {
   const [userdata,setUserdata]=useState()
@@ -79,7 +49,8 @@ const Home = () => {
          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Repellendus, quo illo ipsa nihil alias cupiditate quod corporis inventore hic deserunt reprehenderit! Labore numquam mollitia reiciendis similique quaerat architecto? Nemo, repudiandae?
       </p>
      </div>
-      {/* Hero */}
+     <div>
+      
       <Box
         sx={{
           py: 8,
@@ -140,6 +111,7 @@ const Home = () => {
           ))}
         </Grid>
       </Container>
+       </div> 
     </>
   );
 };

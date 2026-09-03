@@ -7,7 +7,6 @@ import {
   Chip,
   Container,
   Divider,
-  Grid,
   Typography,
 } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
@@ -21,6 +20,7 @@ const ProductDetails = () => {
   const [selectedImage, setSelectedImage] = useState(0);
   const [loading, setLoading] = useState(true);
 
+  // Get single product
   useEffect(() => {
     const getProduct = async () => {
       try {
@@ -42,40 +42,64 @@ const ProductDetails = () => {
     getProduct();
   }, [id]);
 
+  // Loading
   if (loading) {
     return (
-      <Container sx={{ py: 10 }}>
-        <Typography>Loading...</Typography>
-      </Container>
+      <Box
+        sx={{
+          minHeight: "100vh",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Typography variant="h6">Loading...</Typography>
+      </Box>
     );
   }
 
+  // Product not found
   if (!product) {
     return (
-      <Container sx={{ py: 10 }}>
-        <Typography variant="h5">
-          Product not found
-        </Typography>
+      <Box
+        sx={{
+          minHeight: "100vh",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Box sx={{ textAlign: "center" }}>
+          <Typography variant="h5" fontWeight={700}>
+            Product not found
+          </Typography>
 
-        <Button
-          variant="contained"
-          sx={{ mt: 2 }}
-          onClick={() => navigate("/")}
-        >
-          Go Home
-        </Button>
-      </Container>
+          <Button
+            variant="contained"
+            sx={{ mt: 2 }}
+            onClick={() => navigate("/")}
+          >
+            Go Home
+          </Button>
+        </Box>
+      </Box>
     );
   }
 
+  // Product images
   const images = product?.images || [];
+
+  // Seller
   const seller = product?.seller || {};
 
   const sellerName = seller?.name || "Sellora User";
+
   const sellerCity =
     seller?.city || product?.location || "Not available";
+
   const sellerPhone = seller?.phone || "Not available";
 
+  // Product posted date
   const postDate = product?.createdAt
     ? new Date(product.createdAt).toLocaleDateString("en-IN", {
         day: "2-digit",
@@ -84,75 +108,115 @@ const ProductDetails = () => {
       })
     : "Not available";
 
+  // Image URL
+  const getImageUrl = (image) => {
+    return `http://localhost:3000/upload/${image}`;
+  };
+
   return (
     <Box
       sx={{
-        backgroundColor: "#6535e012",
         minHeight: "100vh",
+        backgroundColor: "#f7f8fa",
         py: { xs: 2, md: 5 },
       }}
     >
-      <Container maxWidth="xl">
-
+      <Container
+        maxWidth={false}
+        sx={{
+          width: "100%",
+          px: { xs: 2, sm: 3, md: 5 },
+        }}
+      >
         {/* PAGE TITLE */}
-
-        <Typography
-          variant="h5"
-          fontWeight={700}
+        <Box
           sx={{
+            width: "100%",
+            maxWidth: "1200px",
+            mx: "auto",
             mb: 3,
-            px: 1,
           }}
         >
-          Product Details
-        </Typography>
+          <Typography
+            variant="h5"
+            fontWeight={700}
+          >
+            Product Details
+          </Typography>
+        </Box>
 
+        {/* ================================================= */}
+        {/* MAIN PRODUCT SECTION - FLEX */}
+        {/* ================================================= */}
 
-        {/* =========================================
-            MAIN PRODUCT SECTION
-        ========================================= */}
+        <Box
+          sx={{
+            width: "100%",
+            maxWidth: "1200px",
+            mx: "auto",
 
-        <Grid container spacing={3}>
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "stretch",
 
-          {/* ================= IMAGE SECTION ================= */}
+            gap: 3,
 
-          <Grid item xs={12} md={7}>
+            flexDirection: {
+              xs: "column",
+              md: "row",
+            },
+          }}
+        >
+          {/* ================================================= */}
+          {/* LEFT SIDE - PRODUCT IMAGE */}
+          {/* ================================================= */}
 
+          <Box
+            sx={{
+              width: {
+                xs: "100%",
+                md: "58%",
+              },
+
+              display: "flex",
+              flexDirection: "column",
+            }}
+          >
             <Card
               sx={{
+                width: "100%",
+                height: "100%",
                 borderRadius: 3,
                 overflow: "hidden",
                 backgroundColor: "white",
-                display:fl
+                boxShadow: "0 2px 12px rgba(0,0,0,0.08)",
               }}
             >
-
               {/* MAIN IMAGE */}
 
               <Box
                 sx={{
+                  width: "100%",
                   height: {
-                    xs: 330,
-                    sm: 450,
-                    md: 560,
+                    xs: "330px",
+                    sm: "450px",
+                    md: "550px",
                   },
-                  width: {
-                    xs: 330,
-                    sm: 550,
-                    md: 660,
-                    lg:760
-                  },
-                  backgroundColor: "#185ce4",
+
+                  backgroundColor: "#f1f2f4",
+
                   display: "flex",
-                  alignItems: "center",
                   justifyContent: "center",
+                  alignItems: "center",
+
+                  overflow: "hidden",
                 }}
               >
                 {images.length > 0 ? (
                   <Box
                     component="img"
-                    src={`http://localhost:3000/upload/${images[selectedImage]}`}
-                    alt={product.title}
+                    src={getImageUrl(images[selectedImage])}
+                    alt={product?.title || "Product"}
                     sx={{
                       width: "100%",
                       height: "100%",
@@ -160,12 +224,14 @@ const ProductDetails = () => {
                     }}
                   />
                 ) : (
-                  <Typography color="text.secondary">
+                  <Typography
+                    color="text.secondary"
+                    variant="h6"
+                  >
                     No Image Available
                   </Typography>
                 )}
               </Box>
-
 
               {/* THUMBNAILS */}
 
@@ -174,36 +240,44 @@ const ProductDetails = () => {
                   sx={{
                     display: "flex",
                     gap: 1.5,
+
                     p: 2,
+
                     overflowX: "auto",
-                    borderTop: "1px solid #eee",
+
+                    borderTop: "1px solid #eeeeee",
                   }}
                 >
                   {images.map((image, index) => (
                     <Box
                       key={`${image}-${index}`}
                       component="img"
-                      src={`http://localhost:3000/upload/${image}`}
+                      src={getImageUrl(image)}
                       alt={`Product ${index + 1}`}
                       onClick={() =>
                         setSelectedImage(index)
                       }
                       sx={{
-                        width: 75,
-                        height: 65,
+                        width: 80,
+                        height: 70,
+
+                        flexShrink: 0,
+
                         objectFit: "cover",
+
                         borderRadius: 2,
+
                         cursor: "pointer",
 
                         border:
                           selectedImage === index
                             ? "3px solid"
-                            : "2px solid #eee",
+                            : "2px solid #eeeeee",
 
                         borderColor:
                           selectedImage === index
                             ? "primary.main"
-                            : "#eee",
+                            : "#eeeeee",
 
                         transition: "0.2s",
 
@@ -215,43 +289,58 @@ const ProductDetails = () => {
                   ))}
                 </Box>
               )}
-
             </Card>
-          </Grid>
+          </Box>
 
+          {/* ================================================= */}
+          {/* RIGHT SIDE - PRODUCT INFORMATION */}
+          {/* ================================================= */}
 
-          {/* ================= PRODUCT INFO ================= */}
+          <Box
+            sx={{
+              width: {
+                xs: "100%",
+                md: "42%",
+              },
 
-          <Grid item xs={12} md={5}>
-
+              display: "flex",
+              flexDirection: "column",
+            }}
+          >
             <Card
               sx={{
-                borderRadius: 3,
+                width: "100%",
                 height: "100%",
+
+                borderRadius: 3,
+
                 backgroundColor: "white",
+
+                boxShadow: "0 2px 12px rgba(0,0,0,0.08)",
               }}
             >
-
               <CardContent
                 sx={{
                   p: {
                     xs: 2.5,
+                    sm: 3,
                     md: 4,
                   },
                 }}
               >
-
                 {/* CATEGORY */}
 
                 <Typography
                   variant="body2"
                   color="text.secondary"
-                  fontWeight={500}
-                  sx={{ mb: 1 }}
+                  fontWeight={600}
+                  sx={{
+                    mb: 1,
+                    textTransform: "capitalize",
+                  }}
                 >
                   {product?.category || "Other"}
                 </Typography>
-
 
                 {/* TITLE */}
 
@@ -261,15 +350,17 @@ const ProductDetails = () => {
                   sx={{
                     fontSize: {
                       xs: "28px",
+                      sm: "32px",
                       md: "38px",
                     },
+
                     lineHeight: 1.2,
+
                     mb: 2,
                   }}
                 >
                   {product?.title || "Product"}
                 </Typography>
-
 
                 {/* PRICE */}
 
@@ -277,15 +368,18 @@ const ProductDetails = () => {
                   variant="h4"
                   fontWeight={700}
                   sx={{
-                    mb: 2.5,
+                    mb: 3,
+                    fontSize: {
+                      xs: "28px",
+                      md: "34px",
+                    },
                   }}
                 >
                   ₹
-                  {Number(product?.price || 0).toLocaleString(
-                    "en-IN"
-                  )}
+                  {Number(
+                    product?.price || 0
+                  ).toLocaleString("en-IN")}
                 </Typography>
-
 
                 {/* CONDITION + LOCATION */}
 
@@ -297,31 +391,34 @@ const ProductDetails = () => {
                     mb: 3,
                   }}
                 >
-
                   <Chip
-                    label={product?.condition || "Used"}
+                    label={
+                      product?.condition || "Used"
+                    }
                     sx={{
                       fontWeight: 600,
                     }}
                   />
 
                   <Chip
-                    label={product?.location || "Location"}
+                    label={
+                      product?.location ||
+                      "Location not available"
+                    }
                     variant="outlined"
                   />
-
                 </Box>
 
-
                 <Divider sx={{ mb: 3 }} />
-
 
                 {/* DESCRIPTION */}
 
                 <Typography
                   variant="h6"
                   fontWeight={700}
-                  sx={{ mb: 1.5 }}
+                  sx={{
+                    mb: 1.5,
+                  }}
                 >
                   Description
                 </Typography>
@@ -331,30 +428,46 @@ const ProductDetails = () => {
                   sx={{
                     lineHeight: 1.8,
                     mb: 4,
+
+                    wordBreak: "break-word",
                   }}
                 >
                   {product?.description ||
                     "No description available."}
                 </Typography>
 
-
-                {/* ACTION BUTTONS */}
+                {/* BUTTONS */}
 
                 <Box
                   sx={{
                     display: "flex",
                     gap: 2,
+
+                    flexDirection: {
+                      xs: "column",
+                      sm: "row",
+                    },
                   }}
                 >
-
                   <Button
                     variant="contained"
                     size="large"
                     fullWidth
                     sx={{
                       py: 1.5,
+
                       borderRadius: 2,
+
                       fontWeight: 700,
+
+                      textTransform: "none",
+                    }}
+                    onClick={() => {
+                      if (
+                        seller?.phone
+                      ) {
+                        window.location.href = `tel:${seller.phone}`;
+                      }
                     }}
                   >
                     Contact Seller
@@ -365,57 +478,86 @@ const ProductDetails = () => {
                     size="large"
                     sx={{
                       px: 4,
+
+                      py: 1.5,
+
                       borderRadius: 2,
+
+                      fontWeight: 600,
+
+                      textTransform: "none",
                     }}
                   >
                     Save
                   </Button>
-
                 </Box>
-
               </CardContent>
             </Card>
+          </Box>
+        </Box>
 
-          </Grid>
-        </Grid>
-
-
-        {/* =========================================
-            SELLER INFORMATION - FULL WIDTH
-        ========================================= */}
+        {/* ================================================= */}
+        {/* SELLER INFORMATION - FULL WIDTH */}
+        {/* ================================================= */}
 
         <Card
           sx={{
+            width: "100%",
+            maxWidth: "1200px",
+
+            mx: "auto",
+
             mt: 3,
+
             borderRadius: 3,
+
             backgroundColor: "white",
+
+            boxShadow:
+              "0 2px 12px rgba(0,0,0,0.08)",
           }}
         >
-
           <CardContent
             sx={{
               p: {
                 xs: 2.5,
+                sm: 3,
                 md: 4,
               },
             }}
           >
+            {/* SELLER TITLE */}
 
             <Typography
               variant="h5"
               fontWeight={700}
-              sx={{ mb: 3 }}
+              sx={{
+                mb: 3,
+              }}
             >
               Seller Information
             </Typography>
 
+            {/* SELLER DATA FLEX */}
 
-            <Grid container spacing={3}>
+            <Box
+              sx={{
+                display: "flex",
 
+                justifyContent: "space-between",
+
+                gap: 3,
+
+                flexWrap: "wrap",
+              }}
+            >
               {/* SELLER */}
 
-              <Grid item xs={12} sm={6} md={3}>
-
+              <Box
+                sx={{
+                  flex: "1 1 200px",
+                }}
+              >
                 <Typography
                   variant="body2"
                   color="text.secondary"
@@ -430,14 +572,15 @@ const ProductDetails = () => {
                 >
                   {sellerName}
                 </Typography>
-
-              </Grid>
-
+              </Box>
 
               {/* LOCATION */}
 
-              <Grid item xs={12} sm={6} md={3}>
-
+              <Box
+                sx={{
+                  flex: "1 1 200px",
+                }}
+              >
                 <Typography
                   variant="body2"
                   color="text.secondary"
@@ -452,14 +595,15 @@ const ProductDetails = () => {
                 >
                   {sellerCity}
                 </Typography>
+              </Box>
 
-              </Grid>
+              {/* CONTACT */}
 
-
-              {/* PHONE */}
-
-              <Grid item xs={12} sm={6} md={3}>
-
+              <Box
+                sx={{
+                  flex: "1 1 200px",
+                }}
+              >
                 <Typography
                   variant="body2"
                   color="text.secondary"
@@ -474,14 +618,15 @@ const ProductDetails = () => {
                 >
                   {sellerPhone}
                 </Typography>
+              </Box>
 
-              </Grid>
+              {/* POSTED DATE */}
 
-
-              {/* POST DATE */}
-
-              <Grid item xs={12} sm={6} md={3}>
-
+              <Box
+                sx={{
+                  flex: "1 1 200px",
+                }}
+              >
                 <Typography
                   variant="body2"
                   color="text.secondary"
@@ -496,14 +641,10 @@ const ProductDetails = () => {
                 >
                   {postDate}
                 </Typography>
-
-              </Grid>
-
-            </Grid>
-
+              </Box>
+            </Box>
           </CardContent>
         </Card>
-
       </Container>
     </Box>
   );

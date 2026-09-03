@@ -44,7 +44,7 @@ const auth = (req,res,next)=>{
     const token = req.headers.authorization
     let verified =jwt.verify(token,process.env.JWT_SECRET)
     console.log(verified);
-    userdata =verified
+    req.user =verified
 
     next()
     

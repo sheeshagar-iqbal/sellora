@@ -72,4 +72,14 @@ const logout = async (req, res) => {
   res.json(user);
 };
 
-module.exports = { signup, home, login, logout };
+
+const userget = async (req, res) => {
+  
+  const data = await userModel.findById(req.params.id)
+  if (!data) {
+    res.json("user not found");
+  }
+  res.json(data);
+};
+
+module.exports = { signup, home, login, logout,userget };

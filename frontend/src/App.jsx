@@ -7,6 +7,9 @@ import Login from './pages/Login'
 import Themes from './utils/Themes'
 import ProductInsert from './components/Product.Ads'
 import ProductDetails from './pages/ProductDetails'
+import Profile from './pages/Profile'
+import Prorouter from './utils/Prorouter'
+
 
 
 
@@ -16,11 +19,15 @@ const App = () => {
       <Themes/>
   <Header/>
   <Routes>
-<Route index element={<Home/>}/>
 <Route path='/signup' element={<Signup/>}/>
 <Route path='/login' element={<Login/>}/>
 <Route path='/productinsert' element={<ProductInsert/>}/>
 <Route path='/product/:id' element={<ProductDetails/>}/>
+<Route path='/profile' element={<Profile/>}/>
+
+
+<Route index element={<Prorouter><Home/></Prorouter>}/>
+
 
   </Routes>
     </div>
