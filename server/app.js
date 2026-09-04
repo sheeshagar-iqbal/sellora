@@ -11,11 +11,22 @@ const cors = require("cors")
 const productrouter = require("./routes/product.route")
 // db connected
 require('./config/db')
-app.use(cors())
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
 app.use("/upload",express.static("upload"))
 app.use(logger("tiny"))
 app.use(express.json())
 app.use(express.urlencoded({extended:false}))
+// app.use(session({
+//     resave:true,
+//     saveUninitialized:true,
+//     secret:process.env.SECRED_SESSION
+// }))
+app.use(cookieParser())
 // routes
 app.use(userrouter)
 app.use(productrouter)

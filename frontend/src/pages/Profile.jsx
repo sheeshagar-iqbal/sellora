@@ -17,12 +17,11 @@ const Profile = () => {
 
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  let id ='6a969f294da7b188f66df505'
   useEffect(() => {
     const getProfile = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3000/user/${id}`,
+          "http://localhost:3000/user/profile",
           {
             withCredentials: true,
           }

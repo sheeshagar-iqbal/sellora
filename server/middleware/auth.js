@@ -4,16 +4,36 @@ require('dotenv').config()
 
 
 
-const auth = (req,res,next)=>{
-    const token = req.cookies.token
-    if(!token) return res.json("please login first")
-    let verified =jwt.verify(token,process.env.JWT_SECRET)
-    console.log(verified);
-    req.user =verified
+const auth = (req, res, next) => {
+  try {
+    const token = req.cookies.token;
 
-    next()
-    
-}
+    console.log("TOKEN:", token);
+
+    if (!token) {
+      return res.status(401).json({
+        success: false,
+        message: "Please login first",
+      });
+    }
+
+    const verified = jwt.verify(
+      token,
+      process.env.JWT_SECRET
+    );
+
+    console.log("VERIFIED:", verified);
+
+    req.user = verified;
+
+    next();
+  } catch (error) {
+    return res.status(401).json({
+      success: false,
+      message: "Invalid or expired token",
+    });
+  }
+};
 
 const adminOnly = (req, res, next) => {
   if (req.user.role !== "admin") {
@@ -26,4 +46,4 @@ const adminOnly = (req, res, next) => {
   next();
 };
 
-module.exports = auth;
+module.exports = {auth,adminOnly};

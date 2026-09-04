@@ -19,14 +19,15 @@ const App = () => {
       <Themes/>
   <Header/>
   <Routes>
+<Route path='/' element={<Home/>}/>
+
 <Route path='/signup' element={<Signup/>}/>
 <Route path='/login' element={<Login/>}/>
-<Route path='/productinsert' element={<ProductInsert/>}/>
+<Route path='/productinsert' element={<Prorouter><ProductInsert/></Prorouter>}/>
 <Route path='/product/:id' element={<ProductDetails/>}/>
-<Route path='/profile' element={<Profile/>}/>
+<Route path='/userprofile' element={<Prorouter><Profile/></Prorouter>}/>
 
 
-<Route index element={<Prorouter><Home/></Prorouter>}/>
 
 
   </Routes>

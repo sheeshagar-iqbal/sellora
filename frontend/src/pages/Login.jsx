@@ -9,12 +9,12 @@ import {
   Typography,
 } from "@mui/material";
 
-import { Link } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
-
+  const navigate=useNavigate()
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -29,10 +29,13 @@ const Login = () => {
 
   const submitHandler = async (e) => {
     e.preventDefault();
-    const res= await axios.post('http://localhost:3000/user/login',formData)
-     console.log(res.data.token);
-     localStorage.setItem('token',res.data.token)
-     
+    const res= await axios.post('http://localhost:3000/user/login',formData,{
+    withCredentials: true
+  })
+     console.log(res.data);
+      alert("Login successful");
+
+     navigate('/')
    
     // console.log(formData);
   };
@@ -58,7 +61,7 @@ const Login = () => {
         >
           {/* Heading */}
 
-          <Box textAlign="center" mb={4}>
+          <Box sx={{ textAlign: "center" }} mb={4}>
             <Typography
               variant="h4"
               fontWeight="bold"

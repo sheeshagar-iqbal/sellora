@@ -31,7 +31,9 @@ const Signup = () => {
 
   const submitHandler = (e) => {
     e.preventDefault();
-    axios.post('http://localhost:3000/user/signup',formData)
+    axios.post('http://localhost:3000/user/signup',formData,{
+    withCredentials: true
+  })
     .then((res)=>{alert('data inserted')
     console.log(res.data);
     navigate('/login')

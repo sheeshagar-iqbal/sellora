@@ -16,23 +16,12 @@ import { useState } from "react";
 
 
 const Home = () => {
-  const [userdata,setUserdata]=useState()
+  // const [userdata,setUserdata]=useState()
   const [products,setProducts]=useState([])
-  function  getuser(){
-   axios.get('http://localhost:3000/user',{
-      headers:{
-        authorization:localStorage.getItem('token')
-      }
-    }).then((res)=>{
-    console.log(res.data);
-    setUserdata(res.data)
-  
-    })
-    .catch((err)=>console.log(err)    )
-  }
+ 
   
   useEffect(()=>{
-    getuser()
+ 
    
    axios.get('http://localhost:3000/product')
    .then(res=>setProducts(res.data))
@@ -43,12 +32,7 @@ const Home = () => {
     
 
     <>
-     <div>
-      <h1>{userdata}</h1>
-      <p>
-         Lorem ipsum dolor sit amet, consectetur adipisicing elit. Repellendus, quo illo ipsa nihil alias cupiditate quod corporis inventore hic deserunt reprehenderit! Labore numquam mollitia reiciendis similique quaerat architecto? Nemo, repudiandae?
-      </p>
-     </div>
+     
      <div>
       
       <Box
@@ -106,7 +90,7 @@ const Home = () => {
         <Grid container spacing={3}>
           {products.map((product) => (
             <Grid item xs={12} sm={6} md={4} lg={3} key={product.id}>
-              <ProductCards product={product} />
+              <ProductCards key={product._id} product={product} />
             </Grid>
           ))}
         </Grid>

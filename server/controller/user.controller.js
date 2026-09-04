@@ -14,17 +14,18 @@ const home = asyncerror(async (req, res) => {
 });
 
 const signup = async (req, res) => {
-  const { name, email, password } = req.body;
-
+  const { name, email, password,phone,address } = req.body;
+  const data = await userModel.findOne({email});
+   if (data) return next(new Errorhandler("user already exiting", 404));
   const hashpass = await bcrypt.hash(password, 10);
-  const user = await userModel.create({ name, email, password: hashpass });
+  const user = await userModel.create({ name, email, password: hashpass,phone,address });
   res.status(201).json(user);
 };
 
 const login = async (req, res, next) => {
   const { email, password } = req.body;
-  const data = await userModel.findOne({ email });
-  //   const data = await userModel.findOne({ email }).select('+password');
+  // const data = await userModel.findOne({ email });
+    const data = await userModel.findOne({ email }).select('+password');
   console.log(data);
 
   if (!data) return next(new Errorhandler("user  not fount", 404));
@@ -49,7 +50,12 @@ const login = async (req, res, next) => {
     },
   );
 
-  
+   res.cookie("token", token, {
+  httpOnly: true,
+  secure: false,
+  sameSite: "lax",
+  maxAge: 60 * 60 * 1000,
+});
 
   return res.status(200).json({
     success: true,
@@ -59,30 +65,28 @@ const login = async (req, res, next) => {
       id: data._id,
       name: data.name,
       email: data.email,
+      role:data.role
     },
   });
 };
 
 const logout = async (req, res) => {
-  const { email, password } = req.body;
-  const data = await userModel.findOne({ email });
-  const comp = await bcrypt.compare(password, data.password);
-  if (!comp) {
-    res.json("user not found");
-  } else {
-    res.json("user not found");
-  }
-  res.json(user);
+    res.clearCookie("token", {
+    httpOnly: true,
+    secure: false,
+    sameSite: "lax",
+  });
+  res.json("logout successful");
 };
 
 
-const userget = async (req, res) => {
+const getProfile = async (req, res) => {
   
-  const data = await userModel.findById(req.params.id)
+  const data = await userModel.findById(req.user.id)
   if (!data) {
     res.json("user not found");
   }
   res.json(data);
 };
 
-module.exports = { signup, home, login, logout,userget };
+module.exports = { signup, home, login, logout,getProfile };

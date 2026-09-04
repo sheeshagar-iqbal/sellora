@@ -32,6 +32,7 @@ const postproduct = async (req, res) => {
     const data = await productModel.create({
       ...req.body,
       images: req.files ? req.files.map((e)=>e.filename) : [],
+      seller: req.user.id,
     });
 
     res.status(201).json(data);
