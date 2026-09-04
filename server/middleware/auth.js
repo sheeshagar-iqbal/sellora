@@ -1,47 +1,12 @@
 const jwt = require("jsonwebtoken");
 // const Errorhandler = require("../utils/Errorhandler");
 require('dotenv').config()
-// const auth = async (req, res, next) => {
-//   try {
-//     // 1. Get token from Authorization header
 
-//     const authHeader = req.headers.authorization;
-
-//     if (!authHeader || !authHeader.startsWith("Bearer ")) {
-//       return next(
-//         new Errorhandler("Please login first", 401)
-//       );
-//     }
-
-//     // 2. Extract token
-
-//     const token = authHeader.split(" ")[1];
-
-//     // 3. Verify token
-
-//     const decoded = jwt.verify(
-//       token,
-//       process.env.JWT_SECRET
-//     );
-
-//     // 4. Store decoded user information
-
-//     req.user = decoded;
-
-//     // 5. Continue to next controller
-
-//     next();
-
-//   } catch (error) {
-//     return next(
-//       new Errorhandler("Invalid or expired token", 401)
-//     );
-//   }
-// };
 
 
 const auth = (req,res,next)=>{
-    const token = req.headers.authorization
+    const token = req.cookies.token
+    if(!token) return res.json("please login first")
     let verified =jwt.verify(token,process.env.JWT_SECRET)
     console.log(verified);
     req.user =verified
@@ -49,5 +14,16 @@ const auth = (req,res,next)=>{
     next()
     
 }
+
+const adminOnly = (req, res, next) => {
+  if (req.user.role !== "admin") {
+    return res.status(403).json({
+      success: false,
+      message: "Admin access required",
+    });
+  }
+
+  next();
+};
 
 module.exports = auth;

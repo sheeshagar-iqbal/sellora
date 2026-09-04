@@ -78,7 +78,8 @@ const Profile = () => {
     );
   }
 
-  if (!user) {
+  if (true) {
+  // if (!user) {
     return (
       <Box
         sx={{

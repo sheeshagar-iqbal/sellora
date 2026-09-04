@@ -4,7 +4,7 @@ const userSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      // required: true,
+      required: true,
     },
 
     email: {
@@ -23,7 +23,7 @@ const userSchema = new mongoose.Schema(
     password: {
       type: String,
       required: true,
-      // select :false,
+      select :false,
       // match:[]
     },
 
@@ -37,6 +37,11 @@ const userSchema = new mongoose.Schema(
 
     address: {
       type: String,
+    },
+     role: {
+      type: String,
+      enum: ["user", "admin"],
+      default: "user",
     },
   },
   { timestamps: true },

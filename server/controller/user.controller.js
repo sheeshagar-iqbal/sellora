@@ -41,12 +41,15 @@ const login = async (req, res, next) => {
     {
       id: data._id,
       email: data.email,
+      role:data.role
     },
     process.env.JWT_SECRET,
     {
       expiresIn: process.env.JWT_EXPIRE,
     },
   );
+
+  
 
   return res.status(200).json({
     success: true,
