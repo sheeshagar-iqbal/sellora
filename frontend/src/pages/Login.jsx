@@ -11,10 +11,13 @@ import {
 
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useContext } from "react";
+import { UserContext } from "../context/UserContext";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const navigate=useNavigate()
+  const {setUser}=useContext(UserContext)
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -34,7 +37,7 @@ const Login = () => {
   })
      console.log(res.data);
       alert("Login successful");
-
+      setUser(res.data.user)
      navigate('/')
    
     // console.log(formData);

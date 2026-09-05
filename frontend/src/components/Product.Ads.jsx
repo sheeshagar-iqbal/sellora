@@ -9,6 +9,7 @@ import {
   Typography,
 } from "@mui/material";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const ProductInsert = () => {
   const [formData, setFormData] = useState({
@@ -20,7 +21,7 @@ const ProductInsert = () => {
     location: "",
     images: [],
   });
-
+  const navigate= useNavigate()
   const changeHandler = (e) => {
     const { name, value } = e.target;
 
@@ -54,9 +55,12 @@ const ProductInsert = () => {
     console.log(formData);
 
     axios
-      .post("http://localhost:3000/product", data)
+      .post("http://localhost:3000/product", data,{
+        withCredentials:true
+      })
       .then((res) => {
         console.log(res.data);
+        navigate('/')
       })
       .catch((err) => console.log(err));
   };

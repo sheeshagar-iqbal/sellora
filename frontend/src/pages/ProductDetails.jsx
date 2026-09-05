@@ -11,6 +11,8 @@ import {
 } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
+import { useContext } from "react";
+import { UserContext } from "../context/UserContext";
 
 const ProductDetails = () => {
   const { id } = useParams();
@@ -19,7 +21,7 @@ const ProductDetails = () => {
   const [product, setProduct] = useState(null);
   const [selectedImage, setSelectedImage] = useState(0);
   const [loading, setLoading] = useState(true);
-
+  const {user}= useContext(UserContext)
   // Get single product
   useEffect(() => {
     const getProduct = async () => {
@@ -92,12 +94,12 @@ const ProductDetails = () => {
   // Seller
   const seller = product?.seller || {};
 
-  const sellerName = seller?.name || "Sellora User";
+  const sellerName = user?.name || "Sellora User";
 
   const sellerCity =
-    seller?.city || product?.location || "Not available";
+    user?.city || product?.location || "Not available";
 
-  const sellerPhone = seller?.phone || "Not available";
+  const sellerPhone = user?.phone || "Not available";
 
   // Product posted date
   const postDate = product?.createdAt
@@ -491,6 +493,66 @@ const ProductDetails = () => {
                     Save
                   </Button>
                 </Box>
+
+                {/* update and delete */}
+
+                {
+                  (user._id === product.seller)?
+                  <Box
+                  sx={{
+                    display: "flex",
+                    gap: 2,
+                    marginTop:'12px',
+
+                    flexDirection: {
+                      xs: "column",
+                      sm: "row",
+                    },
+                  }}
+                >
+                  <Button
+                    variant="contained"
+                    size="large"
+                    fullWidth
+                    sx={{
+                      py: 1.5,
+                      background:'green',
+                      borderRadius: 2,
+
+                      fontWeight: 700,
+
+                      textTransform: "none",
+                    }}
+                    onClick={() => {
+                      if (
+                        seller?.phone
+                      ) {
+                        window.location.href = `tel:${seller.phone}`;
+                      }
+                    }}
+                  >
+                    UPDATE
+                  </Button>
+
+                  <Button
+                    variant="outlined"
+                    size="large"
+                    sx={{
+                      px: 4,
+
+                      py: 1.5,
+
+                      borderRadius: 2,
+
+                      fontWeight: 600,
+
+                      textTransform: "none",
+                    }}
+                  >
+                    Delete
+                  </Button>
+                </Box>:""
+                }
               </CardContent>
             </Card>
           </Box>

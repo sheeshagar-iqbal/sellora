@@ -8,15 +8,18 @@ import {
   Divider,
   Typography,
   Avatar,
+  Grid
 } from "@mui/material";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import ProductCards from "../components/ProductCards";
 
 const Profile = () => {
   const navigate = useNavigate();
 
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [products,setproducts]=useState([])
   useEffect(() => {
     const getProfile = async () => {
       try {
@@ -26,7 +29,8 @@ const Profile = () => {
             withCredentials: true,
           }
         );
-
+        console.log(response.data);
+        
         setUser(response.data.data || response.data);
       } catch (error) {
         console.log(
@@ -37,8 +41,26 @@ const Profile = () => {
         setLoading(false);
       }
     };
-
+    const getProducts = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:3000/myproduct",
+          {
+            withCredentials: true,
+          }
+        );
+        console.log(response.data);
+        
+        setproducts(response.data.data || response.data);
+      } catch (error) {
+        console.log(
+          "Profile error:",
+          error.response?.data || error.message
+        );
+      }
+    };
     getProfile();
+    getProducts();
   }, []);
 
   // Logout
@@ -77,8 +99,8 @@ const Profile = () => {
     );
   }
 
-  if (true) {
-  // if (!user) {
+  // if (true) {
+  if (!user) {
     return (
       <Box
         sx={{
@@ -117,6 +139,7 @@ const Profile = () => {
     : "Not available";
 
   return (
+    <>
     <Box
       sx={{
         minHeight: "100vh",
@@ -420,6 +443,16 @@ const Profile = () => {
         </Card>
       </Container>
     </Box>
+  
+    <Grid container spacing={3}>
+          {products.map((product) => (
+            <Grid item xs={12} sm={6} md={3} lg={4} key={product.id}>
+              <ProductCards key={product._id} product={product}  />
+            </Grid>
+            
+          ))}
+        </Grid>
+    </>
   );
 };
 
