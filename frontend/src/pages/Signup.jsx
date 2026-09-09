@@ -10,6 +10,7 @@ import {
 import TextareaAutosize from "@mui/material/TextareaAutosize";
 import axios from 'axios'
 import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -34,8 +35,9 @@ const Signup = () => {
     axios.post('http://localhost:3000/user/signup',formData,{
     withCredentials: true
   })
-    .then((res)=>{alert('data inserted')
+    .then((res)=>{
     console.log(res.data);
+    toast.success('Signup successfully')
     navigate('/login')
     })
     .catch((err)=>console.log(err)    )

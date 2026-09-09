@@ -16,7 +16,7 @@ const Prorouter = ({ children }) => {
           }
         );
 
-        console.log("PROFILE RESPONSE:", res.data);
+        // console.log("PROFILE RESPONSE:", res.data);
 
         if (res.data) {
           setIsAuth(true);

@@ -13,6 +13,7 @@ import {
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import ProductCards from "../components/ProductCards";
+import { toast } from "react-toastify";
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -29,7 +30,7 @@ const Profile = () => {
             withCredentials: true,
           }
         );
-        console.log(response.data);
+        // console.log(response.data);
         
         setUser(response.data.data || response.data);
       } catch (error) {
@@ -49,7 +50,7 @@ const Profile = () => {
             withCredentials: true,
           }
         );
-        console.log(response.data);
+        // console.log(response.data);
         
         setproducts(response.data.data || response.data);
       } catch (error) {
@@ -72,7 +73,7 @@ const Profile = () => {
           withCredentials: true,
         }
       );
-
+      toast.success('Logout successfully')
       navigate("/login");
     } catch (error) {
       console.log(

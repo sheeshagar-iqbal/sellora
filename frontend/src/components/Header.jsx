@@ -20,44 +20,23 @@ import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useContext } from "react";
+import { UserContext } from "../context/UserContext";
 
 const Header = () => {
   const navigate = useNavigate();
 
   // IMPORTANT: null when user is not logged in
-  const [user, setUser] = useState(null);
+
   const [anchorEl, setAnchorEl] = useState(null);
 
   const menuOpen = Boolean(anchorEl);
 
   // ================= GET USER =================
+    const {user,setUser} =useContext(UserContext)
+  
 
-  const getUser = async () => {
-    try {
-      const response = await axios.get(
-        "http://localhost:3000/user/profile",
-        {
-          withCredentials: true,
-        }
-      );
-
-      console.log("USER:", response.data);
-
-      setUser(response.data);
-    } catch (error) {
-      console.log(
-        "AUTH ERROR:",
-        error.response?.data || error.message
-      );
-
-      // No valid login
-      setUser(null);
-    }
-  };
-
-  useEffect(() => {
-    getUser();
-  }, []);
+  
 
   // ================= USER MENU =================
 
@@ -219,8 +198,8 @@ const Header = () => {
             >
               {user?.image ? (
                 <Avatar
-                  src={user.image}
-                  alt={user.username}
+                  src={`http://localhost:3000/upload/${user.profileImage}`}
+                  alt={user?.username}
                   sx={{
                     width: 42,
                     height: 42,
@@ -268,8 +247,8 @@ const Header = () => {
                 >
                   {user?.image ? (
                     <Avatar
-                      src={user.image}
-                      alt={user.username}
+                      src={`http://localhost:3000/upload/${user.profileImage}`}
+                      alt={user?.username}
                     />
                   ) : (
                     <AccountCircleIcon
@@ -281,7 +260,7 @@ const Header = () => {
                     <Typography
                       fontWeight={700}
                     >
-                      {user?.username || "User"}
+                      {user?.name || "User"}
                     </Typography>
 
                     <Typography

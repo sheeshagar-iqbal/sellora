@@ -13,6 +13,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { useContext } from "react";
 import { UserContext } from "../context/UserContext";
+import { toast } from "react-toastify";
+import {addToCart} from "../utils/addcard.js"
 
 const ProductDetails = () => {
   const { id } = useParams();
@@ -22,6 +24,32 @@ const ProductDetails = () => {
   const [selectedImage, setSelectedImage] = useState(0);
   const [loading, setLoading] = useState(true);
   const {user}= useContext(UserContext)
+
+
+  function handleproductupdate(id){
+    console.log(id);
+    toast.success('product deleted successfully')
+    navigate(`/productupdate/${id}`)
+    
+  }
+async  function handleproductdelete(id){
+    // console.log(id);
+    try {
+       const response = await axios.delete(
+          `http://localhost:3000/product/${id}`,
+          {
+            withCredentials: true,
+          }
+        );
+        navigate('/userprofile')
+    } catch (error) {
+      console.log(
+          "Profile error:",
+          error.response?.data || error.message
+        );
+    }
+    
+  }
   // Get single product
   useEffect(() => {
     const getProduct = async () => {
@@ -31,6 +59,10 @@ const ProductDetails = () => {
         );
 
         setProduct(response.data.data || response.data);
+        console.log(response.data.data || response.data);
+        // console.log(user);
+        
+        
       } catch (error) {
         console.log(
           "Product error:",
@@ -94,12 +126,12 @@ const ProductDetails = () => {
   // Seller
   const seller = product?.seller || {};
 
-  const sellerName = user?.name || "Sellora User";
+  const sellerName = seller?.name || "Sellora User";
 
   const sellerCity =
-    user?.city || product?.location || "Not available";
+    seller?.city || product?.location || "Not available";
 
-  const sellerPhone = user?.phone || "Not available";
+  const sellerPhone = seller?.phone || "Not available";
 
   // Product posted date
   const postDate = product?.createdAt
@@ -464,13 +496,7 @@ const ProductDetails = () => {
 
                       textTransform: "none",
                     }}
-                    onClick={() => {
-                      if (
-                        seller?.phone
-                      ) {
-                        window.location.href = `tel:${seller.phone}`;
-                      }
-                    }}
+                   
                   >
                     Contact Seller
                   </Button>
@@ -489,6 +515,8 @@ const ProductDetails = () => {
 
                       textTransform: "none",
                     }}
+                    onClick={() => addToCart(product._id)}
+                    
                   >
                     Save
                   </Button>
@@ -497,7 +525,7 @@ const ProductDetails = () => {
                 {/* update and delete */}
 
                 {
-                  (user._id === product.seller)?
+                  (user._id === product.seller._id)?
                   <Box
                   sx={{
                     display: "flex",
@@ -523,13 +551,7 @@ const ProductDetails = () => {
 
                       textTransform: "none",
                     }}
-                    onClick={() => {
-                      if (
-                        seller?.phone
-                      ) {
-                        window.location.href = `tel:${seller.phone}`;
-                      }
-                    }}
+                    onClick={()=>handleproductupdate(product._id)}
                   >
                     UPDATE
                   </Button>
@@ -548,6 +570,8 @@ const ProductDetails = () => {
 
                       textTransform: "none",
                     }}
+                    onClick={()=>handleproductdelete(product._id)}
+
                   >
                     Delete
                   </Button>

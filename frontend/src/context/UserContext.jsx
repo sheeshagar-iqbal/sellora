@@ -5,7 +5,7 @@ import { useEffect } from "react";
 export const UserContext = createContext();
 
 const UserProvider = ({ children }) => {
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState(null);
   useEffect(()=>{
      const getProfile = async () => {
           try {
@@ -16,8 +16,13 @@ const UserProvider = ({ children }) => {
               }
             );
             // console.log(response.data);
-            
+            if(response?.data){
             setUser(response.data.data || response.data);
+                  
+            }else{
+              setUser(null)
+            }
+            
           } catch (error) {
             console.log(
               "Profile error:",

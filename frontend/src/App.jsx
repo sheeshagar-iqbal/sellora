@@ -9,7 +9,11 @@ import ProductInsert from './components/Product.Ads'
 import ProductDetails from './pages/ProductDetails'
 import Profile from './pages/Profile'
 import Prorouter from './utils/Prorouter'
-
+import ProductUpdate from './components/Prpduct.Ads.Put'
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import Wishlist from './pages/Wishlist'
+import AddToCart from './pages/AddToCard'
 
 
 
@@ -24,13 +28,22 @@ const App = () => {
 <Route path='/signup' element={<Signup/>}/>
 <Route path='/login' element={<Login/>}/>
 <Route path='/productinsert' element={<Prorouter><ProductInsert/></Prorouter>}/>
+<Route path='/productupdate/:id' element={<Prorouter><ProductUpdate/></Prorouter>}/>
 <Route path='/product/:id' element={<ProductDetails/>}/>
 <Route path='/userprofile' element={<Prorouter><Profile/></Prorouter>}/>
+<Route path='/wishlist' element={<Prorouter><Wishlist/></Prorouter>}/>
+<Route path='/cart' element={<Prorouter><AddToCart/></Prorouter>}/>
 
 
 
 
   </Routes>
+
+
+  <ToastContainer
+        position="top-right"
+        autoClose={2000}
+      />
     </div>
   )
 }

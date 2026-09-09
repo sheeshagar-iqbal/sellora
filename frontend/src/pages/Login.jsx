@@ -13,6 +13,7 @@ import { Link, Navigate, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useContext } from "react";
 import { UserContext } from "../context/UserContext";
+import { toast } from "react-toastify";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -35,9 +36,9 @@ const Login = () => {
     const res= await axios.post('http://localhost:3000/user/login',formData,{
     withCredentials: true
   })
-     console.log(res.data);
-      alert("Login successful");
+    //  console.log(res.data);
       setUser(res.data.user)
+      toast.success('Login successfully')
      navigate('/')
    
     // console.log(formData);

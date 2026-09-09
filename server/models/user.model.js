@@ -43,6 +43,25 @@ const userSchema = new mongoose.Schema(
       enum: ["user", "admin"],
       default: "user",
     },
+     wishlist: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "product"
+    }
+  ],
+
+  cart: [
+    {
+      product: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "product"
+      },
+      quantity: {
+        type: Number,
+        default: 1
+      }
+    }
+  ]
   },
   { timestamps: true },
 );

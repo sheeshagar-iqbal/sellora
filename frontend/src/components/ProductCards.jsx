@@ -6,12 +6,16 @@ import {
   Typography,
   Box,
   Chip,
+  IconButton,
 } from "@mui/material";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { useNavigate } from "react-router-dom";
+import { addWishlist } from "../utils/addwishlist";
 
 const ProductCards = ({ product }) => {
   const navigate = useNavigate();
-
+  // console.log(product);
+  
   const imageUrl = product?.images?.[0]
     ? `http://localhost:3000/upload/${product.images[0]}`
     : "https://via.placeholder.com/400x250?text=No+Image";
@@ -20,30 +24,46 @@ const ProductCards = ({ product }) => {
     <Card
       onClick={() => navigate(`/product/${product?._id}`)}
       sx={{
+        width: 350,
+        // height: 400,
         borderRadius: 3,
         overflow: "hidden",
         cursor: "pointer",
-        height: "100%",
+        display: "flex",
+        flexDirection: "column",
         transition: "all 0.3s ease",
+        border: "1px solid #eeeeee",
+        boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
 
         "&:hover": {
           transform: "translateY(-5px)",
-          boxShadow: 6,
+          boxShadow: "0 8px 25px rgba(0,0,0,0.15)",
         },
       }}
     >
       {/* IMAGE */}
-      <Box sx={{ position: "relative" }}>
+      <Box
+        sx={{
+          position: "relative",
+          width: "100%",
+          height: 230,
+          flexShrink: 0,
+          backgroundColor: "#f5f5f5",
+        }}
+      >
         <CardMedia
           component="img"
-          height="220"
           image={imageUrl}
-          alt={product?.title}
+          alt={product?.title || "Product"}
           sx={{
+            width: "100%",
+            height: "100%",
             objectFit: "cover",
+            display: "block",
           }}
         />
 
+        {/* CONDITION */}
         {product?.condition && (
           <Chip
             label={product.condition}
@@ -52,37 +72,83 @@ const ProductCards = ({ product }) => {
               position: "absolute",
               top: 12,
               left: 12,
-              backgroundColor: "white",
+              backgroundColor: "#fff",
               fontWeight: 600,
+              boxShadow: 1,
             }}
           />
         )}
+
+        {/* WISHLIST */}
+        <IconButton
+          onClick={(e) => {
+             e.stopPropagation();
+             addWishlist(product._id)
+             
+          }}
+          sx={{
+            position: "absolute",
+            top: 8,
+            right: 8,
+            backgroundColor: "#fff",
+
+            "&:hover": {
+              backgroundColor: "#f20606",
+            },
+          }}
+        >
+          <FavoriteBorderIcon />
+        </IconButton>
       </Box>
 
       {/* CONTENT */}
-      <CardContent sx={{ p: 2 }}>
+      <CardContent
+        sx={{
+          p: 2,
+          display: "flex",
+          flexDirection: "column",
+          flexGrow: 1,
+        }}
+      >
+        {/* PRICE */}
+        <Typography
+          variant="h6"
+          fontWeight={800}
+          sx={{
+            mb: 0.5,
+            color: "#222",
+          }}
+        >
+          ₹{Number(product?.price || 0).toLocaleString("en-IN")}
+        </Typography>
 
-        {/* ROW 1 */}
+        {/* TITLE */}
+        <Typography
+          variant="body1"
+          fontWeight={600}
+          sx={{
+            mb: 1,
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+          }}
+        >
+          {product?.title}
+        </Typography>
+
+        {/* CATEGORY + LOCATION */}
         <Box
           sx={{
             display: "flex",
             justifyContent: "space-between",
-            alignItems: "center",
+            gap: 1,
             mb: 1,
           }}
         >
           <Typography
-            variant="h6"
-            fontWeight={700}
-          >
-            ₹{Number(product?.price || 0).toLocaleString("en-IN")}
-          </Typography>
-
-          <Typography
             variant="body2"
             color="text.secondary"
             sx={{
-              maxWidth: "45%",
               overflow: "hidden",
               textOverflow: "ellipsis",
               whiteSpace: "nowrap",
@@ -90,43 +156,47 @@ const ProductCards = ({ product }) => {
           >
             {product?.category}
           </Typography>
-        </Box>
-
-        {/* ROW 2 */}
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
-          <Typography
-            variant="body1"
-            fontWeight={500}
-            sx={{
-              maxWidth: "55%",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              whiteSpace: "nowrap",
-            }}
-          >
-            {product?.title}
-          </Typography>
 
           <Typography
             variant="body2"
             color="text.secondary"
             sx={{
-              maxWidth: "40%",
               overflow: "hidden",
               textOverflow: "ellipsis",
               whiteSpace: "nowrap",
             }}
           >
-            {product?.location}
+            📍 {product?.location}
           </Typography>
         </Box>
 
+        {/* SELLER */}
+        <Box
+          sx={{
+            marginTop: "auto",
+            pt: 1.5,
+            borderTop: "1px solid #eeeeee",
+          }}
+        >
+          <Typography
+            variant="caption"
+            color="text.secondary"
+          >
+            Seller
+          </Typography>
+
+          <Typography
+            variant="body2"
+            fontWeight={600}
+            sx={{
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+            }}
+          >
+            {product?.seller?.name || "Unknown Seller"}
+          </Typography>
+        </Box>
       </CardContent>
     </Card>
   );

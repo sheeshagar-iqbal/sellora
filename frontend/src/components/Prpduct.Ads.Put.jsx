@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -9,10 +9,10 @@ import {
   Typography,
 } from "@mui/material";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
-const ProductInsert = () => {
+const ProductUpdate = () => {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -23,6 +23,9 @@ const ProductInsert = () => {
     images: [],
   });
   const navigate= useNavigate()
+  const {id}= useParams()
+//   console.log(id);
+  
   const changeHandler = (e) => {
     const { name, value } = e.target;
 
@@ -56,17 +59,38 @@ const ProductInsert = () => {
     console.log(formData);
 
     axios
-      .post("http://localhost:3000/product", data,{
+      .put(`http://localhost:3000/product/${id}`, data,{
         withCredentials:true
       })
       .then((res) => {
         // console.log(res.data);
-        toast.success('product added successfully')
-        navigate('/')
+        toast.success('product update successfully')
+        navigate('/userprofile')
       })
       .catch((err) => console.log(err));
   };
+  useEffect(() => {
+    const getProduct = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:3000/product/${id}`
+        );
 
+        setFormData(response.data.data || response.data);
+        console.log(response.data.data || response.data);
+        // console.log(user);
+        
+        
+      } catch (error) {
+        console.log(
+          "Product error:",
+          error.response?.data || error.message
+        );
+      }
+    };
+
+    getProduct();
+  }, []);
   return (
     <Box
       sx={{
@@ -91,7 +115,7 @@ const ProductInsert = () => {
               fontWeight="bold"
               sx={{ color: "#102A43" }}
             >
-              Post Your Ad
+              Update Your Ad
             </Typography>
 
             <Typography color="text.secondary" sx={{ mt: 1 }}>
@@ -269,4 +293,4 @@ const ProductInsert = () => {
   );
 };
 
-export default ProductInsert;
+export default ProductUpdate;

@@ -89,4 +89,251 @@ const getProfile = async (req, res) => {
   res.json(data);
 };
 
-module.exports = { signup, home, login, logout,getProfile };
+
+
+//============== userwish list   =============
+const addWishlist = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const productId = req.params.productId;
+
+    const user = await userModel.findById(userId);
+
+    if (user.wishlist.includes(productId)) {
+      return res.status(400).json({
+        message: "Product already in wishlist"
+      });
+    }
+
+    user.wishlist.push(productId);
+
+    await user.save();
+
+    res.status(200).json({
+      message: "Product added to wishlist",
+      wishlist: user.wishlist
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      message: "Server error",
+      error: error.message
+    });
+  }
+};
+
+
+
+
+
+
+// getwishlist
+
+const getWishlist = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const user = await userModel
+      .findById(userId)
+      .populate("wishlist");
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found"
+      });
+    }
+
+    res.status(200).json({
+      wishlist: user.wishlist
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      message: "Server error",
+      error: error.message
+    });
+  }
+};
+
+// delete
+
+const removeWishlist = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const productId = req.params.productId;
+
+    const user = await userModel.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found"
+      });
+    }
+
+    user.wishlist = user.wishlist.filter(
+      id => id.toString() !== productId
+    );
+
+    await user.save();
+
+    res.status(200).json({
+      message: "Product removed from wishlist"
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      message: "Server error",
+      error: error.message
+    });
+  }
+};
+
+
+
+// =======add cart =========
+
+const addCart = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const productId = req.params.productId;
+
+    const user = await userModel.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found"
+      });
+    }
+
+    const existingProduct = user.cart.find(
+      (item) => item.product.toString() === productId
+    );
+
+    if (existingProduct) {
+      existingProduct.quantity += 1;
+    } else {
+      user.cart.push({
+        product: productId,
+        quantity: 1
+      });
+    }
+
+    await user.save();
+
+    res.status(200).json({
+      message: "Product added to cart",
+      cart: user.cart
+    });
+
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({
+      message: "Server error",
+      error: error.message
+    });
+  }
+};
+
+
+const getCart = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const user = await userModel
+      .findById(userId)
+      .populate("cart.product");
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found"
+      });
+    }
+
+    res.status(200).json({
+      cart: user.cart
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      message: "Server error",
+      error: error.message
+    });
+  }
+};
+const updateCart = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const productId = req.params.productId;
+    const { quantity } = req.body;
+
+    const user = await userModel.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found"
+      });
+    }
+
+    const item = user.cart.find(
+      item => item.product.toString() === productId
+    );
+
+    if (!item) {
+      return res.status(404).json({
+        message: "Product not found in cart"
+      });
+    }
+
+    if (quantity <= 0) {
+      user.cart = user.cart.filter(
+        item => item.product.toString() !== productId
+      );
+    } else {
+      item.quantity = quantity;
+    }
+
+    await user.save();
+
+    res.status(200).json({
+      message: "Cart updated"
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      message: "Server error",
+      error: error.message
+    });
+  }
+};
+const removeCart = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const productId = req.params.productId;
+
+    const user = await userModel.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found"
+      });
+    }
+
+    user.cart = user.cart.filter(
+      item => item.product.toString() !== productId
+    );
+
+    await user.save();
+
+    res.status(200).json({
+      message: "Product removed from cart"
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      message: "Server error",
+      error: error.message
+    });
+  }
+};
+module.exports = { signup, home, login, logout,getProfile,addWishlist ,addCart,getWishlist,removeWishlist,getCart,updateCart,removeCart};

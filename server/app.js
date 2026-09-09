@@ -1,10 +1,10 @@
 const express = require("express")
 const app = express()
 require("dotenv").config()
-const logger =require("morgan")
+// const logger =require("morgan")
 const userrouter = require("./routes/user.route")
 const Errorhandler = require("./middleware/Errorhandler")
-const generateError = require("./middleware/ErrorFormatjs")
+const generateError = require("./middleware/ErrorFormat.js")
 const session = require('express-session')
 const cookieParser = require('cookie-parser')
 const cors = require("cors")
@@ -18,7 +18,7 @@ app.use(
   })
 );
 app.use("/upload",express.static("upload"))
-app.use(logger("tiny"))
+// app.use(logger("tiny"))
 app.use(express.json())
 app.use(express.urlencoded({extended:false}))
 // app.use(session({
@@ -35,4 +35,8 @@ app.use((req,res,next)=>{
 })
 
 app.use(generateError)
+app.get('/',(req,res)=>{
+  res.send('hello world');
+  
+})
 app.listen(process.env.PORT,()=>console.log(`server is running ${process.env.PORT}`))

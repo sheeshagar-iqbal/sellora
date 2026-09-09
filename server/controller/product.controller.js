@@ -56,7 +56,7 @@ const postproduct = async (req, res) => {
 
 const getproduct = async (req, res) => {
   try {
-    const data = await productModel.find();
+    const data = await productModel.find().populate("seller");
     res.json(data);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -64,7 +64,7 @@ const getproduct = async (req, res) => {
 };
 const getsingleproduct = async (req, res) => {
   try {
-    const data = await productModel.findById(req.params.id);
+    const data = await productModel.findById(req.params.id).populate("seller");
 
     if (!data) return res.status(500).json({ message: "user not found" });
     res.json(data);
@@ -181,10 +181,30 @@ const deleteproduct = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+
+
+
+const myProducts = async (req, res) => {
+  try {
+    console.log(req.user);
+    
+    const products = await productModel.find({seller: req.user.id}).populate("seller");
+
+    res.status(200).json(products)
+
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
+};
 module.exports = {
   getproduct,
   getsingleproduct,
   postproduct,
   putproduct,
   deleteproduct,
+   myProducts
 };
