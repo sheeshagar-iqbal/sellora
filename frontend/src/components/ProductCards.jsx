@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
   Card,
   CardMedia,
@@ -11,9 +11,12 @@ import {
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { useNavigate } from "react-router-dom";
 import { addWishlist } from "../utils/addwishlist";
+import { UserContext } from "../context/UserContext";
+
 
 const ProductCards = ({ product }) => {
   const navigate = useNavigate();
+  const {getProfile}=useContext(UserContext)
   // console.log(product);
   
   const imageUrl = product?.images?.[0]
@@ -81,9 +84,10 @@ const ProductCards = ({ product }) => {
 
         {/* WISHLIST */}
         <IconButton
-          onClick={(e) => {
+          onClick={async(e) => {
              e.stopPropagation();
-             addWishlist(product._id)
+            await addWishlist(product._id)
+            await getProfile()
              
           }}
           sx={{

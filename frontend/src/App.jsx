@@ -20,7 +20,7 @@ import AddToCart from './pages/AddToCard'
 const App = () => {
   return (
     <div>
-      <Themes/>
+      {/* <Themes/> */}
   <Header/>
   <Routes>
 <Route path='/' element={<Home/>}/>

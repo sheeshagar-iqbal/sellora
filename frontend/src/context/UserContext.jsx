@@ -6,8 +6,7 @@ export const UserContext = createContext();
 
 const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  useEffect(()=>{
-     const getProfile = async () => {
+  const getProfile = async () => {
           try {
             const response = await axios.get(
               "http://localhost:3000/user/profile",
@@ -30,10 +29,12 @@ const UserProvider = ({ children }) => {
             );
           } 
         };
+  useEffect(()=>{
+     
         getProfile()
   },[])
   return (
-    <UserContext.Provider value={{ user, setUser }}>
+    <UserContext.Provider value={{ user, setUser,getProfile }}>
       {children}
     </UserContext.Provider>
   );

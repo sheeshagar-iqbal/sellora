@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import {
   Box,
@@ -15,10 +15,11 @@ import CloseIcon from "@mui/icons-material/Close";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { toast } from "react-toastify";
 import { addToCart } from "../utils/addcard";
+import { UserContext } from "../context/UserContext";
 
 const Wishlist = () => {
   const [wishlist, setWishlist] = useState([]);
-
+  const {getProfile}=useContext(UserContext)
   // Get Wishlist
   const getWishlist = async () => {
     try {
@@ -59,7 +60,7 @@ const Wishlist = () => {
           (product) => product._id !== productId
         )
       );
-
+       await getProfile()
       toast.success("Removed from wishlist ❤️");
     } catch (error) {
       toast.error(
@@ -199,8 +200,10 @@ const Wishlist = () => {
                       textTransform: "none",
                       fontWeight: 600,
                     }}
-                    onClick={() =>
-                      addToCart(product._id)
+                    onClick={async() =>{
+                     await addToCart(product._id)
+                     await getProfile()
+                    }
                     }
                   >
                     Add to Cart

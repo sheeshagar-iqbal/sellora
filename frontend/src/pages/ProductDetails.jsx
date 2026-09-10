@@ -14,7 +14,7 @@ import axios from "axios";
 import { useContext } from "react";
 import { UserContext } from "../context/UserContext";
 import { toast } from "react-toastify";
-import {addToCart} from "../utils/addcard.js"
+import { addToCart } from "../utils/addcard.js";
 
 const ProductDetails = () => {
   const { id } = useParams();
@@ -23,33 +23,31 @@ const ProductDetails = () => {
   const [product, setProduct] = useState(null);
   const [selectedImage, setSelectedImage] = useState(0);
   const [loading, setLoading] = useState(true);
-  const {user}= useContext(UserContext)
+  const { user, getProfile } = useContext(UserContext);
 
-
-  function handleproductupdate(id){
+  function handleproductupdate(id) {
     console.log(id);
-    toast.success('product deleted successfully')
-    navigate(`/productupdate/${id}`)
-    
+    toast.success("product deleted successfully");
+    navigate(`/productupdate/${id}`);
   }
-async  function handleproductdelete(id){
-    // console.log(id);
+
+  async function handleproductdelete(id) {
     try {
-       const response = await axios.delete(
-          `http://localhost:3000/product/${id}`,
-          {
-            withCredentials: true,
-          }
-        );
-        navigate('/userprofile')
+      const response = await axios.delete(
+        `http://localhost:3000/product/${id}`,
+        {
+          withCredentials: true,
+        }
+      );
+      navigate("/userprofile");
     } catch (error) {
       console.log(
-          "Profile error:",
-          error.response?.data || error.message
-        );
+        "Profile error:",
+        error.response?.data || error.message
+      );
     }
-    
   }
+
   // Get single product
   useEffect(() => {
     const getProduct = async () => {
@@ -60,9 +58,6 @@ async  function handleproductdelete(id){
 
         setProduct(response.data.data || response.data);
         console.log(response.data.data || response.data);
-        // console.log(user);
-        
-        
       } catch (error) {
         console.log(
           "Product error:",
@@ -85,9 +80,18 @@ async  function handleproductdelete(id){
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
+          backgroundColor: "#E6E6E6",
         }}
       >
-        <Typography variant="h6">Loading...</Typography>
+        <Typography
+          variant="h6"
+          sx={{
+            color: "#02224E",
+            fontWeight: 600,
+          }}
+        >
+          Loading...
+        </Typography>
       </Box>
     );
   }
@@ -101,16 +105,31 @@ async  function handleproductdelete(id){
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
+          backgroundColor: "#E6E6E6",
         }}
       >
         <Box sx={{ textAlign: "center" }}>
-          <Typography variant="h5" fontWeight={700}>
+          <Typography
+            variant="h5"
+            fontWeight={700}
+            sx={{
+              color: "#02224E",
+            }}
+          >
             Product not found
           </Typography>
 
           <Button
             variant="contained"
-            sx={{ mt: 2 }}
+            sx={{
+              mt: 2,
+              backgroundColor: "#FD6B02",
+              textTransform: "none",
+              fontWeight: 600,
+              "&:hover": {
+                backgroundColor: "#FD4702",
+              },
+            }}
             onClick={() => navigate("/")}
           >
             Go Home
@@ -151,7 +170,7 @@ async  function handleproductdelete(id){
     <Box
       sx={{
         minHeight: "100vh",
-        backgroundColor: "#f7f8fa",
+        backgroundColor: "#E6E6E6",
         py: { xs: 2, md: 5 },
       }}
     >
@@ -162,7 +181,8 @@ async  function handleproductdelete(id){
           px: { xs: 2, sm: 3, md: 5 },
         }}
       >
-        {/* PAGE TITLE */}
+        {/* ================= PAGE TITLE ================= */}
+
         <Box
           sx={{
             width: "100%",
@@ -173,15 +193,16 @@ async  function handleproductdelete(id){
         >
           <Typography
             variant="h5"
-            fontWeight={700}
+            fontWeight={800}
+            sx={{
+              color: "#02224E",
+            }}
           >
             Product Details
           </Typography>
         </Box>
 
-        {/* ================================================= */}
-        {/* MAIN PRODUCT SECTION - FLEX */}
-        {/* ================================================= */}
+        {/* ================= MAIN PRODUCT SECTION ================= */}
 
         <Box
           sx={{
@@ -201,9 +222,7 @@ async  function handleproductdelete(id){
             },
           }}
         >
-          {/* ================================================= */}
-          {/* LEFT SIDE - PRODUCT IMAGE */}
-          {/* ================================================= */}
+          {/* ================= LEFT SIDE - PRODUCT IMAGE ================= */}
 
           <Box
             sx={{
@@ -222,8 +241,8 @@ async  function handleproductdelete(id){
                 height: "100%",
                 borderRadius: 3,
                 overflow: "hidden",
-                backgroundColor: "white",
-                boxShadow: "0 2px 12px rgba(0,0,0,0.08)",
+                backgroundColor: "#fff",
+                boxShadow: "0 2px 12px rgba(2,34,78,0.12)",
               }}
             >
               {/* MAIN IMAGE */}
@@ -237,7 +256,7 @@ async  function handleproductdelete(id){
                     md: "550px",
                   },
 
-                  backgroundColor: "#f1f2f4",
+                  backgroundColor: "#F5F7FA",
 
                   display: "flex",
                   justifyContent: "center",
@@ -279,7 +298,7 @@ async  function handleproductdelete(id){
 
                     overflowX: "auto",
 
-                    borderTop: "1px solid #eeeeee",
+                    borderTop: "1px solid #E6E6E6",
                   }}
                 >
                   {images.map((image, index) => (
@@ -305,18 +324,13 @@ async  function handleproductdelete(id){
 
                         border:
                           selectedImage === index
-                            ? "3px solid"
-                            : "2px solid #eeeeee",
-
-                        borderColor:
-                          selectedImage === index
-                            ? "primary.main"
-                            : "#eeeeee",
+                            ? "3px solid #FD6B02"
+                            : "2px solid #E6E6E6",
 
                         transition: "0.2s",
 
                         "&:hover": {
-                          borderColor: "primary.main",
+                          borderColor: "#029FFE",
                         },
                       }}
                     />
@@ -326,9 +340,7 @@ async  function handleproductdelete(id){
             </Card>
           </Box>
 
-          {/* ================================================= */}
-          {/* RIGHT SIDE - PRODUCT INFORMATION */}
-          {/* ================================================= */}
+          {/* ================= RIGHT SIDE - PRODUCT INFORMATION ================= */}
 
           <Box
             sx={{
@@ -348,9 +360,9 @@ async  function handleproductdelete(id){
 
                 borderRadius: 3,
 
-                backgroundColor: "white",
+                backgroundColor: "#fff",
 
-                boxShadow: "0 2px 12px rgba(0,0,0,0.08)",
+                boxShadow: "0 2px 12px rgba(2,34,78,0.12)",
               }}
             >
               <CardContent
@@ -366,11 +378,11 @@ async  function handleproductdelete(id){
 
                 <Typography
                   variant="body2"
-                  color="text.secondary"
-                  fontWeight={600}
+                  fontWeight={700}
                   sx={{
                     mb: 1,
                     textTransform: "capitalize",
+                    color: "#029FFE",
                   }}
                 >
                   {product?.category || "Other"}
@@ -391,6 +403,8 @@ async  function handleproductdelete(id){
                     lineHeight: 1.2,
 
                     mb: 2,
+
+                    color: "#02224E",
                   }}
                 >
                   {product?.title || "Product"}
@@ -400,13 +414,16 @@ async  function handleproductdelete(id){
 
                 <Typography
                   variant="h4"
-                  fontWeight={700}
+                  fontWeight={800}
                   sx={{
                     mb: 3,
+
                     fontSize: {
                       xs: "28px",
                       md: "34px",
                     },
+
+                    color: "#FD6B02",
                   }}
                 >
                   ₹
@@ -431,6 +448,8 @@ async  function handleproductdelete(id){
                     }
                     sx={{
                       fontWeight: 600,
+                      color: "#fff",
+                      backgroundColor: "#02224E",
                     }}
                   />
 
@@ -440,10 +459,20 @@ async  function handleproductdelete(id){
                       "Location not available"
                     }
                     variant="outlined"
+                    sx={{
+                      fontWeight: 600,
+                      color: "#029FFE",
+                      borderColor: "#029FFE",
+                    }}
                   />
                 </Box>
 
-                <Divider sx={{ mb: 3 }} />
+                <Divider
+                  sx={{
+                    mb: 3,
+                    borderColor: "#E6E6E6",
+                  }}
+                />
 
                 {/* DESCRIPTION */}
 
@@ -452,18 +481,20 @@ async  function handleproductdelete(id){
                   fontWeight={700}
                   sx={{
                     mb: 1.5,
+                    color: "#02224E",
                   }}
                 >
                   Description
                 </Typography>
 
                 <Typography
-                  color="text.secondary"
                   sx={{
                     lineHeight: 1.8,
                     mb: 4,
 
                     wordBreak: "break-word",
+
+                    color: "#555",
                   }}
                 >
                   {product?.description ||
@@ -495,8 +526,17 @@ async  function handleproductdelete(id){
                       fontWeight: 700,
 
                       textTransform: "none",
+
+                      backgroundColor: "#FD6B02",
+
+                      boxShadow: "none",
+
+                      "&:hover": {
+                        backgroundColor: "#FD4702",
+                        boxShadow:
+                          "0 5px 15px rgba(253,107,2,0.25)",
+                      },
                     }}
-                   
                   >
                     Contact Seller
                   </Button>
@@ -514,77 +554,109 @@ async  function handleproductdelete(id){
                       fontWeight: 600,
 
                       textTransform: "none",
+
+                      color: "#029FFE",
+
+                      borderColor: "#029FFE",
+
+                      "&:hover": {
+                        color: "#fff",
+                        backgroundColor: "#029FFE",
+                        borderColor: "#029FFE",
+                      },
                     }}
-                    onClick={() => addToCart(product._id)}
-                    
+                    onClick={async () => {
+                      await addToCart(product._id);
+                      await getProfile();
+                    }}
                   >
                     Save
                   </Button>
                 </Box>
 
-                {/* update and delete */}
+                {/* ================= UPDATE AND DELETE ================= */}
 
-                {
-                  (user._id === product.seller._id)?
+                {(user?._id === product?.seller?._id) ? (
                   <Box
-                  sx={{
-                    display: "flex",
-                    gap: 2,
-                    marginTop:'12px',
-
-                    flexDirection: {
-                      xs: "column",
-                      sm: "row",
-                    },
-                  }}
-                >
-                  <Button
-                    variant="contained"
-                    size="large"
-                    fullWidth
                     sx={{
-                      py: 1.5,
-                      background:'green',
-                      borderRadius: 2,
+                      display: "flex",
+                      gap: 2,
+                      marginTop: "12px",
 
-                      fontWeight: 700,
-
-                      textTransform: "none",
+                      flexDirection: {
+                        xs: "column",
+                        sm: "row",
+                      },
                     }}
-                    onClick={()=>handleproductupdate(product._id)}
                   >
-                    UPDATE
-                  </Button>
+                    <Button
+                      variant="contained"
+                      size="large"
+                      fullWidth
+                      sx={{
+                        py: 1.5,
 
-                  <Button
-                    variant="outlined"
-                    size="large"
-                    sx={{
-                      px: 4,
+                        backgroundColor: "#02224E",
 
-                      py: 1.5,
+                        borderRadius: 2,
 
-                      borderRadius: 2,
+                        fontWeight: 700,
 
-                      fontWeight: 600,
+                        textTransform: "none",
 
-                      textTransform: "none",
-                    }}
-                    onClick={()=>handleproductdelete(product._id)}
+                        boxShadow: "none",
 
-                  >
-                    Delete
-                  </Button>
-                </Box>:""
-                }
+                        "&:hover": {
+                          backgroundColor: "#029FFE",
+                        },
+                      }}
+                      onClick={() =>
+                        handleproductupdate(product._id)
+                      }
+                    >
+                      UPDATE
+                    </Button>
+
+                    <Button
+                      variant="outlined"
+                      size="large"
+                      sx={{
+                        px: 4,
+
+                        py: 1.5,
+
+                        borderRadius: 2,
+
+                        fontWeight: 600,
+
+                        textTransform: "none",
+
+                        color: "#FD4702",
+
+                        borderColor: "#FD4702",
+
+                        "&:hover": {
+                          color: "#fff",
+                          backgroundColor: "#FD4702",
+                          borderColor: "#FD4702",
+                        },
+                      }}
+                      onClick={() =>
+                        handleproductdelete(product._id)
+                      }
+                    >
+                      Delete
+                    </Button>
+                  </Box>
+                ) : (
+                  ""
+                )}
               </CardContent>
             </Card>
           </Box>
         </Box>
 
-        {/* ================================================= */}
-        {/* SELLER INFORMATION - FULL WIDTH */}
-        {/* ================================================= */}
+        {/* ================= SELLER INFORMATION ================= */}
 
         <Card
           sx={{
@@ -597,10 +669,9 @@ async  function handleproductdelete(id){
 
             borderRadius: 3,
 
-            backgroundColor: "white",
+            backgroundColor: "#fff",
 
-            boxShadow:
-              "0 2px 12px rgba(0,0,0,0.08)",
+            boxShadow: "0 2px 12px rgba(2,34,78,0.12)",
           }}
         >
           <CardContent
@@ -619,6 +690,7 @@ async  function handleproductdelete(id){
               fontWeight={700}
               sx={{
                 mb: 3,
+                color: "#02224E",
               }}
             >
               Seller Information
@@ -646,8 +718,11 @@ async  function handleproductdelete(id){
               >
                 <Typography
                   variant="body2"
-                  color="text.secondary"
-                  sx={{ mb: 0.5 }}
+                  sx={{
+                    mb: 0.5,
+                    color: "#029FFE",
+                    fontWeight: 600,
+                  }}
                 >
                   Seller
                 </Typography>
@@ -655,6 +730,9 @@ async  function handleproductdelete(id){
                 <Typography
                   variant="h6"
                   fontWeight={600}
+                  sx={{
+                    color: "#02224E",
+                  }}
                 >
                   {sellerName}
                 </Typography>
@@ -669,8 +747,11 @@ async  function handleproductdelete(id){
               >
                 <Typography
                   variant="body2"
-                  color="text.secondary"
-                  sx={{ mb: 0.5 }}
+                  sx={{
+                    mb: 0.5,
+                    color: "#029FFE",
+                    fontWeight: 600,
+                  }}
                 >
                   Location
                 </Typography>
@@ -678,6 +759,9 @@ async  function handleproductdelete(id){
                 <Typography
                   variant="h6"
                   fontWeight={600}
+                  sx={{
+                    color: "#02224E",
+                  }}
                 >
                   {sellerCity}
                 </Typography>
@@ -692,8 +776,11 @@ async  function handleproductdelete(id){
               >
                 <Typography
                   variant="body2"
-                  color="text.secondary"
-                  sx={{ mb: 0.5 }}
+                  sx={{
+                    mb: 0.5,
+                    color: "#029FFE",
+                    fontWeight: 600,
+                  }}
                 >
                   Contact
                 </Typography>
@@ -701,6 +788,9 @@ async  function handleproductdelete(id){
                 <Typography
                   variant="h6"
                   fontWeight={600}
+                  sx={{
+                    color: "#02224E",
+                  }}
                 >
                   {sellerPhone}
                 </Typography>
@@ -715,8 +805,11 @@ async  function handleproductdelete(id){
               >
                 <Typography
                   variant="body2"
-                  color="text.secondary"
-                  sx={{ mb: 0.5 }}
+                  sx={{
+                    mb: 0.5,
+                    color: "#029FFE",
+                    fontWeight: 600,
+                  }}
                 >
                   Posted On
                 </Typography>
@@ -724,6 +817,9 @@ async  function handleproductdelete(id){
                 <Typography
                   variant="h6"
                   fontWeight={600}
+                  sx={{
+                    color: "#02224E",
+                  }}
                 >
                   {postDate}
                 </Typography>

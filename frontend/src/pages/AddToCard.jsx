@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import {
   Box,
@@ -17,11 +17,12 @@ import RemoveIcon from "@mui/icons-material/Remove";
 import DeleteIcon from "@mui/icons-material/Delete";
 
 import { toast } from "react-toastify";
+import { UserContext } from "../context/UserContext";
 
 const AddToCart = () => {
 
   const [cart, setCart] = useState([]);
-
+  const {getProfile}=useContext(UserContext)
   const getCart = async () => {
     try {
 
@@ -108,7 +109,7 @@ const AddToCart = () => {
           item => item.product._id !== productId
         )
       );
-
+      await getProfile()
       toast.success("Removed from cart 🛒");
 
     } catch (error) {
