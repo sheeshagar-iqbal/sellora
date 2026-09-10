@@ -56,12 +56,72 @@ const postproduct = async (req, res) => {
 
 const getproduct = async (req, res) => {
   try {
-    const data = await productModel.find().populate("seller");
-    res.json(data);
+    const { search, category } = req.query;
+
+    let filter = {};
+
+    // ================= SEARCH =================
+
+    if (search) {
+      filter.$or = [
+        {
+          title: {
+            $regex: search,
+            $options: "i",
+          },
+        },
+        {
+          category: {
+            $regex: search,
+            $options: "i",
+          },
+        },
+        {
+          location: {
+            $regex: search,
+            $options: "i",
+          },
+        },
+      ];
+    }
+
+    // ================= CATEGORY =================
+
+    if (category && category !== "All") {
+      filter.category = {
+        $regex: category,
+        $options: "i",
+      };
+    }
+
+    const products = await productModel.find(filter)
+      .populate("seller")
+      .sort({ createdAt: -1 });
+
+    res.status(200).json({
+      success: true,
+      count: products.length,
+      products,
+    });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.log(error);
+
+    res.status(500).json({
+      success: false,
+      message: "Failed to get products",
+    });
   }
 };
+
+
+// const getproduct = async (req, res) => {
+//   try {
+//     const data = await productModel.find().populate("seller");
+//     res.json(data);
+//   } catch (error) {
+//     res.status(500).json({ message: error.message });
+//   }
+// };
 const getsingleproduct = async (req, res) => {
   try {
     const data = await productModel.findById(req.params.id).populate("seller");

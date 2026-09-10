@@ -336,4 +336,35 @@ const removeCart = async (req, res) => {
     });
   }
 };
-module.exports = { signup, home, login, logout,getProfile,addWishlist ,addCart,getWishlist,removeWishlist,getCart,updateCart,removeCart};
+
+
+
+//   edit profile 
+
+const editproduct = async (req, res) => {
+  try {
+    const data = await userModel.create({
+      ...req.body,
+      imagesprofile: req.file.filename
+    
+    });
+
+    res.status(201).json(data);
+  } catch (error) {
+     if (req.file) {
+     
+        const filePath = path.join('upload', req.file.filename);
+
+        fs.unlink(filePath, (err) => {
+          if (err) {
+            console.log("Image delete error:", err.message);
+          } else {
+            console.log("Deleted:", file.filename);
+          }
+  
+      });
+    }
+    res.status(500).json({ message: error.message });
+  }
+};
+module.exports = { signup, home, login, logout,getProfile,addWishlist ,addCart,getWishlist,removeWishlist,getCart,updateCart,removeCart,editproduct};
