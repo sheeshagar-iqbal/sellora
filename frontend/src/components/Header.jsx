@@ -1,5 +1,5 @@
+import React, { useContext, useState } from "react";
 
-import React, { useEffect, useState } from "react";
 import {
   AppBar,
   Toolbar,
@@ -20,23 +20,17 @@ import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { useContext } from "react";
+
 import { UserContext } from "../context/UserContext";
 
 const Header = () => {
   const navigate = useNavigate();
 
-  // IMPORTANT: null when user is not logged in
+  const { user, setUser } = useContext(UserContext);
 
   const [anchorEl, setAnchorEl] = useState(null);
 
   const menuOpen = Boolean(anchorEl);
-
-  // ================= GET USER =================
-    const {user,setUser} =useContext(UserContext)
-  
-
-  
 
   // ================= USER MENU =================
 
@@ -64,9 +58,21 @@ const Header = () => {
 
       navigate("/login");
     } catch (error) {
-      console.log("Logout error:", error);
+      console.log(
+        "Logout error:",
+        error.response?.data || error.message
+      );
     }
   };
+
+  // ================= COUNTS =================
+
+  // Wishlist products count
+  const wishlistCount = user?.wishlist?.length || 0;
+
+  // Cart total quantity
+  const cartCount =
+    user?.cart?.length || 0;
 
   return (
     <AppBar
@@ -84,6 +90,7 @@ const Header = () => {
           px: { xs: 2, md: 5 },
         }}
       >
+
         {/* ================= LOGO ================= */}
 
         <Box
@@ -107,9 +114,7 @@ const Header = () => {
           />
         </Box>
 
-        {/* =================================================
-                    USER NOT LOGGED IN
-        ================================================= */}
+        {/* ================= NOT LOGGED IN ================= */}
 
         {!user && (
           <Box
@@ -143,9 +148,7 @@ const Header = () => {
           </Box>
         )}
 
-        {/* =================================================
-                    USER LOGGED IN
-        ================================================= */}
+        {/* ================= LOGGED IN ================= */}
 
         {user && (
           <Box
@@ -155,6 +158,7 @@ const Header = () => {
               gap: 1,
             }}
           >
+
             {/* ================= WISHLIST ================= */}
 
             <IconButton
@@ -164,8 +168,9 @@ const Header = () => {
               }}
             >
               <Badge
-                badgeContent={0}
+                badgeContent={wishlistCount}
                 color="error"
+                max={99}
               >
                 <FavoriteBorderIcon />
               </Badge>
@@ -180,12 +185,31 @@ const Header = () => {
               }}
             >
               <Badge
-                badgeContent={0}
+                badgeContent={cartCount}
                 color="error"
+                max={99}
               >
                 <ShoppingCartOutlinedIcon />
               </Badge>
             </IconButton>
+
+            {/* ================= SELL BUTTON ================= */}
+
+            <Button
+              variant="contained"
+              onClick={() => navigate("/productinsert")}
+              sx={{
+                ml: 2,
+                px: 2,
+                py: 1,
+                borderRadius: 2,
+                fontWeight: 600,
+                textTransform: "none",
+                fontSize:15
+              }}
+            >
+              + Sell
+            </Button>
 
             {/* ================= USER ================= */}
 
@@ -196,10 +220,10 @@ const Header = () => {
                 p: 0.5,
               }}
             >
-              {user?.image ? (
+              {user?.profileImage ? (
                 <Avatar
                   src={`http://localhost:3000/upload/${user.profileImage}`}
-                  alt={user?.username}
+                  alt={user?.name}
                   sx={{
                     width: 42,
                     height: 42,
@@ -229,6 +253,7 @@ const Header = () => {
                 horizontal: "right",
               }}
             >
+
               {/* USER INFORMATION */}
 
               <Box
@@ -245,21 +270,22 @@ const Header = () => {
                     gap: 1.5,
                   }}
                 >
-                  {user?.image ? (
+
+                  {user?.profileImage ? (
                     <Avatar
                       src={`http://localhost:3000/upload/${user.profileImage}`}
-                      alt={user?.username}
+                      alt={user?.name}
                     />
                   ) : (
                     <AccountCircleIcon
-                      sx={{ fontSize: 40 }}
+                      sx={{
+                        fontSize: 40,
+                      }}
                     />
                   )}
 
                   <Box>
-                    <Typography
-                      fontWeight={700}
-                    >
+                    <Typography fontWeight={700}>
                       {user?.name || "User"}
                     </Typography>
 
@@ -270,6 +296,7 @@ const Header = () => {
                       {user?.email}
                     </Typography>
                   </Box>
+
                 </Box>
               </Box>
 
@@ -297,6 +324,17 @@ const Header = () => {
                 My Account
               </MenuItem>
 
+              {/* MY ADS */}
+
+              <MenuItem
+                onClick={() => {
+                  handleClose();
+                  navigate("/myads");
+                }}
+              >
+                My Ads
+              </MenuItem>
+
               {/* WISHLIST */}
 
               <MenuItem
@@ -305,7 +343,7 @@ const Header = () => {
                   navigate("/wishlist");
                 }}
               >
-                Wishlist
+                Wishlist ({wishlistCount})
               </MenuItem>
 
               {/* CART */}
@@ -316,7 +354,7 @@ const Header = () => {
                   navigate("/cart");
                 }}
               >
-                My Cart
+                My Cart ({cartCount})
               </MenuItem>
 
               <Divider />
@@ -326,13 +364,14 @@ const Header = () => {
               <MenuItem onClick={handleLogout}>
                 Logout
               </MenuItem>
+
             </Menu>
           </Box>
         )}
+
       </Toolbar>
     </AppBar>
   );
 };
 
 export default Header;
-
