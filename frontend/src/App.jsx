@@ -14,6 +14,9 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Wishlist from './pages/Wishlist'
 import AddToCart from './pages/AddToCard'
+import EditProfile from './pages/EditProfile'
+import Adminrouter from './utils/Adminrouter'
+import Admindashboard from './pages/Admindashboard'
 
 
 
@@ -33,8 +36,11 @@ const App = () => {
 <Route path='/userprofile' element={<Prorouter><Profile/></Prorouter>}/>
 <Route path='/wishlist' element={<Prorouter><Wishlist/></Prorouter>}/>
 <Route path='/cart' element={<Prorouter><AddToCart/></Prorouter>}/>
+<Route path='/edit-profile' element={<Prorouter><EditProfile/></Prorouter>}/>
 
 
+<Route path="/admin" element={<Adminrouter><Admindashboard></Admindashboard></Adminrouter> }
+/>
 
 
   </Routes>

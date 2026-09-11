@@ -64,10 +64,7 @@ const Header = () => {
 
       navigate("/login");
     } catch (error) {
-      console.log(
-        "Logout error:",
-        error.response?.data || error.message
-      );
+      console.log("Logout error:", error.response?.data || error.message);
     }
   };
 
@@ -76,7 +73,7 @@ const Header = () => {
   const wishlistCount = user?.wishlist?.length || 0;
 
   // Total quantity
-  const cartCount = user?.cart?.length|| 0;
+  const cartCount = user?.cart?.length || 0;
 
   return (
     <AppBar
@@ -174,7 +171,9 @@ const Header = () => {
 
         {/* ================= LOGGED IN ================= */}
 
-        {user && (
+       
+
+        {user  && (
           <Box
             sx={{
               display: "flex",
@@ -398,8 +397,11 @@ const Header = () => {
               <Divider />
 
               {/* PROFILE */}
-
-              <MenuItem
+               {user?.role === "admin" ?
+          <MenuItem onClick={() => navigate("/admin")}>
+            Admin Dashboard
+          </MenuItem>:
+          <MenuItem
                 onClick={() => {
                   handleClose();
                   navigate("/userprofile");
@@ -413,6 +415,9 @@ const Header = () => {
               >
                 Profile
               </MenuItem>
+        }
+              
+              
 
               {/* MY ACCOUNT */}
 
