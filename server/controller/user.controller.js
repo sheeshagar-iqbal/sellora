@@ -13,7 +13,7 @@ const home = asyncerror(async (req, res) => {
   res.json("home");
 });
 
-const signup = async (req, res) => {
+const signup = async (req, res,next) => {
   const { name, email, password,phone,address } = req.body;
   const data = await userModel.findOne({email});
    if (data) return next(new Errorhandler("user already exiting", 404));
@@ -28,7 +28,7 @@ const login = async (req, res, next) => {
     const data = await userModel.findOne({ email }).select('+password');
   console.log(data);
 
-  if (!data) return next(new Errorhandler("user  not fount", 404));
+  if (!data) return next(new Errorhandler("user not fount", 404));
 
   const comp = await bcrypt.compare(password, data.password);
 
@@ -83,9 +83,7 @@ const logout = async (req, res) => {
 const getProfile = async (req, res) => {
   
   const data = await userModel.findById(req.user.id)
-  if (!data) {
-    res.json("user not found");
-  }
+  if (!data) return next(new Errorhandler('user not fount',404))
   res.json(data);
 };
 
@@ -343,28 +341,61 @@ const removeCart = async (req, res) => {
 
 const editproduct = async (req, res) => {
   try {
-    const data = await userModel.create({
-      ...req.body,
-      imagesprofile: req.file.filename
-    
-    });
+    const user = await userModel.findById(req.user.id);
 
-    res.status(201).json(data);
-  } catch (error) {
-     if (req.file) {
-     
-        const filePath = path.join('upload', req.file.filename);
-
-        fs.unlink(filePath, (err) => {
-          if (err) {
-            console.log("Image delete error:", err.message);
-          } else {
-            console.log("Deleted:", file.filename);
-          }
-  
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
       });
     }
-    res.status(500).json({ message: error.message });
+
+    // Update text fields
+    user.name = req.body.name;
+    user.email = req.body.email;
+    user.phone = req.body.phone;
+    user.address = req.body.address;
+
+    // Update profile image only if new image uploaded
+    if (req.file) {
+      user.profileImage = req.file.filename;
+    }
+
+    const updatedUser = await user.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Profile updated successfully",
+      data: updatedUser,
+    });
+
+  } catch (error) {
+    // Delete newly uploaded image if database update fails
+    if (req.file) {
+      const filePath = path.join(
+        "upload",
+        req.file.filename
+      );
+
+      fs.unlink(filePath, (err) => {
+        if (err) {
+          console.log(
+            "Image delete error:",
+            err.message
+          );
+        } else {
+          console.log(
+            "Deleted:",
+            req.file.filename
+          );
+        }
+      });
+    }
+
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
   }
 };
 module.exports = { signup, home, login, logout,getProfile,addWishlist ,addCart,getWishlist,removeWishlist,getCart,updateCart,removeCart,editproduct};

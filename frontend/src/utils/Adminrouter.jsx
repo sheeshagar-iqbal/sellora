@@ -2,11 +2,12 @@ import React, { useContext, useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 // import { UserContext } from "../context/UserContext";
 import axios from "axios";
+import { UserContext } from "../context/UserContext";
 
 const Adminrouter = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [isAuth, setIsAuth] = useState(false);
-
+  const {setUser}= useContext(UserContext)
   useEffect(() => {
     const checkAuth = async () => {
       try {
@@ -14,8 +15,8 @@ const Adminrouter = ({ children }) => {
           withCredentials: true,
         });
 
-        console.log("PROFILE RESPONSE:", res.data);
-
+        // console.log("PROFILE RESPONSE:", res.data);
+        setUser(res.data)
         if (res.data) {
           setIsAuth(true);
         } else {

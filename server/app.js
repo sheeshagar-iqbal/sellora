@@ -9,6 +9,7 @@ const session = require('express-session')
 const cookieParser = require('cookie-parser')
 const cors = require("cors")
 const productrouter = require("./routes/product.route")
+const adminrouter = require("./routes/admin.route.js")
 // db connected
 require('./config/db')
 app.use(
@@ -30,6 +31,7 @@ app.use(cookieParser())
 // routes
 app.use(userrouter)
 app.use(productrouter)
+app.use(adminrouter)
 app.use((req,res,next)=>{
     next(new Errorhandler(`requested not found ${req.url}`,404));
 })

@@ -17,10 +17,7 @@ const auth = (req, res, next) => {
       });
     }
 
-    const verified = jwt.verify(
-      token,
-      process.env.JWT_SECRET
-    );
+    const verified = jwt.verify(token,process.env.JWT_SECRET);
 
     console.log("VERIFIED:", verified);
 
@@ -36,21 +33,28 @@ const auth = (req, res, next) => {
 };
 
 const admin = (req, res, next) => {
-  if (!req.user) {
-    return res.status(401).json({
+  try {
+    if (!req.user) {
+      return res.status(401).json({
+        success: false,
+        message: "Unauthorized",
+      });
+    }
+
+    if (req.user.role !== "admin") {
+      return res.status(403).json({
+        success: false,
+        message: "Admin access required",
+      });
+    }
+
+    next();
+  } catch (error) {
+    return res.status(500).json({
       success: false,
-      message: "Please login first"
+      message: "Admin authorization failed",
     });
   }
-
-  if (req.user.role !== "admin") {
-    return res.status(403).json({
-      success: false,
-      message: "Admin access required"
-    });
-  }
-
-  next();
 };
 
 

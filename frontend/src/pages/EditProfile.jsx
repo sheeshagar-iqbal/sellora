@@ -134,7 +134,7 @@ const EditProfile = () => {
 
       toast.success("Profile updated successfully");
 
-      navigate("/profile");
+      navigate("/userprofile");
     } catch (error) {
       console.log(
         "Update profile error:",
