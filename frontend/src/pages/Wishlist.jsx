@@ -22,6 +22,7 @@ import { toast } from "react-toastify";
 
 import { addToCart } from "../utils/addcard";
 import { UserContext } from "../context/UserContext";
+import BackButton from "../components/BackButton";
 
 const Wishlist = () => {
   const [wishlist, setWishlist] = useState([]);
@@ -99,6 +100,7 @@ const Wishlist = () => {
     >
       <Container maxWidth="xl">
         {/* ================= HEADER ================= */}
+          <BackButton/>
 
         <Box
           sx={{
@@ -110,6 +112,7 @@ const Wishlist = () => {
             gap: 2,
           }}
         >
+
           <Box>
             <Typography
               variant="h4"

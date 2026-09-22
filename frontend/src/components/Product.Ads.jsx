@@ -54,18 +54,96 @@ const ProductInsert = () => {
   // IMAGE HANDLER
   // =========================
   const imageHandler = (e) => {
+     const files = Array.from(e.target.files);
+
+  if (files.length < 5) {
+    toast.error("Please select at least 5 images");
+    return;
+  }
+
+  if (files.length > 8) {
+    toast.error("You can select maximum 8 images");
+    return;
+  }
     setFormData((prev) => ({
       ...prev,
       images: Array.from(e.target.files),
     }));
   };
 
+
+
+  const validateForm = () => {
+  const titleWords = formData.title
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean);
+
+  // Title
+  if (!formData.title.trim()) {
+    toast.error("Product title is required");
+    return false;
+  }
+
+  if (titleWords.length < 4) {
+    toast.error(
+      "Product title must contain at least 4 words"
+    );
+    return false;
+  }
+
+  // Description
+  if (!formData.description.trim()) {
+    toast.error("Description is required");
+    return false;
+  }
+
+  if (formData.description.trim().length < 20) {
+    toast.error(
+      "Description must contain at least 20 characters"
+    );
+    return false;
+  }
+
+  // Price
+  if (!formData.price || Number(formData.price) <= 0) {
+    toast.error("Please enter a valid price");
+    return false;
+  }
+
+  // Category
+  if (!formData.category) {
+    toast.error("Please select a category");
+    return false;
+  }
+
+  // Location
+  if (!formData.location.trim()) {
+    toast.error("Location is required");
+    return false;
+  }
+
+  // Images
+  if (formData.images.length < 5) {
+    toast.error("Please select at least 5 images");
+    return false;
+  }
+
+  if (formData.images.length > 8) {
+    toast.error("You can select maximum 8 images");
+    return false;
+  }
+
+  return true;
+};
   // =========================
   // SUBMIT
   // =========================
   const submitHandler = async (e) => {
     e.preventDefault();
-
+      if (!validateForm()) {
+    return;
+  }
     const data = new FormData();
 
     data.append("title", formData.title);
@@ -78,6 +156,7 @@ const ProductInsert = () => {
     formData.images.forEach((image) => {
       data.append("images", image);
     });
+    
 
     try {
       const res = await axios.post(

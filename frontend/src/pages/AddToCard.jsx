@@ -24,6 +24,7 @@ import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 
 import { toast } from "react-toastify";
 import { UserContext } from "../context/UserContext";
+import BackButton from "../components/BackButton";
 
 const AddToCart = () => {
   const [cart, setCart] = useState([]);
@@ -37,7 +38,8 @@ const AddToCart = () => {
       const res = await axios.get("http://localhost:3000/addcard", {
         withCredentials: true,
       });
-
+      // console.log(res.data.cart);
+      
       setCart(res.data.cart || []);
     } catch (error) {
       console.log(error);
@@ -110,6 +112,7 @@ const AddToCart = () => {
     (total, item) => total + Number(item.product.price) * item.quantity,
     0,
   );
+console.log(cart);
 
   // ================= TOTAL ITEMS =================
 
@@ -125,6 +128,7 @@ const AddToCart = () => {
     >
       <Container maxWidth="xl">
         {/* ================= HEADER ================= */}
+            <BackButton/>
 
         <Box
           sx={{
@@ -136,6 +140,7 @@ const AddToCart = () => {
             gap: 2,
           }}
         >
+          
           <Box
             sx={{
               display: "flex",

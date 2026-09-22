@@ -13,22 +13,87 @@ const home = asyncerror(async (req, res) => {
   res.json("home");
 });
 
-const signup = async (req, res,next) => {
-  const { name, email, password,phone,address } = req.body;
-  const data = await userModel.findOne({email});
-   if (data) return next(new Errorhandler("user already exiting", 404));
-  const hashpass = await bcrypt.hash(password, 10);
-  const user = await userModel.create({ name, email, password: hashpass,phone,address });
-  res.status(201).json(user);
+const signup = async (req, res, next) => {
+  try {
+    const { name, email, password, phone, address } = req.body;
+
+    if (!name || !email || !password || !phone || !address) {
+      return next( new Errorhandler("All fields are required", 400));
+    }
+
+
+    if (name.trim().length < 2) {
+      return next( new Errorhandler("Name must contain at least 2 characters", 400));
+    }
+
+ 
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!emailRegex.test(email)) {
+       return next( new Errorhandler("Please enter a valid email address", 400));
+    }
+
+
+    if (password.length < 6) {
+      return next( new Errorhandler("Password must be at least 6 characters", 400));
+    }
+
+
+    if (!/^[0-9]{10}$/.test(phone)) {
+      return next(new Errorhandler("Phone number must contain exactly 10 digits", 400));
+    }
+
+
+    const data = await userModel.findOne({
+      email: email.toLowerCase().trim()
+    });
+
+    if (data) {
+      return next(
+        new Errorhandler("Email is already registered", 409)
+      );
+    }
+
+    const hashpass = await bcrypt.hash(password, 10);
+
+    const user = await userModel.create({
+      name: name.trim(),
+      email: email.toLowerCase().trim(),
+      password: hashpass,
+      phone,
+      address: address.trim()
+    });
+
+    res.status(201).json({
+      success: true,
+      message: "Account created successfully",
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        phone: user.phone,
+        address: user.address,
+        role: user.role
+      }
+    });
+
+  } catch (error) {
+    next(error);
+  }
 };
 
 const login = async (req, res, next) => {
-  const { email, password } = req.body;
+  try {
+    const { email, password } = req.body;
   // const data = await userModel.findOne({ email });
-    const data = await userModel.findOne({ email }).select('+password');
-  console.log(data);
+  if (!email || !password) {
+      return next(new Errorhandler("Email and password are required", 400));
+    }
 
-  if (!data) return next(new Errorhandler("user not fount", 404));
+    const data = await userModel.findOne({ email: email.toLowerCase().trim() }).select('+password');
+  // console.log(data);
+
+  if (!data) return next(new Errorhandler("Invalid email or password", 401));
 
   const comp = await bcrypt.compare(password, data.password);
 
@@ -68,6 +133,9 @@ const login = async (req, res, next) => {
       role:data.role
     },
   });
+  } catch (error) {
+     next(error);
+  }
 };
 
 const logout = async (req, res) => {

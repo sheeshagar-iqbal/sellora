@@ -14,10 +14,11 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import BackButton from "../components/BackButton";
 
 const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
-
+  const [errors, setErrors] = useState({});
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -27,6 +28,41 @@ const Signup = () => {
   });
 
   const navigate = useNavigate();
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (!formData.name.trim()) {
+      newErrors.name = "Name is required";
+    } else if (formData.name.trim().length < 2) {
+      newErrors.name = "Name must contain at least 2 characters";
+    }
+
+    if (!formData.email.trim()) {
+      newErrors.email = "Email is required";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = "Enter a valid email";
+    }
+
+    if (!formData.password) {
+      newErrors.password = "Password is required";
+    } else if (formData.password.length < 6) {
+      newErrors.password = "Password must be at least 6 characters";
+    }
+
+    if (!formData.phone) {
+      newErrors.phone = "Phone number is required";
+    } else if (!/^[0-9]{10}$/.test(formData.phone)) {
+      newErrors.phone = "Phone must contain exactly 10 digits";
+    }
+
+    if (!formData.address.trim()) {
+      newErrors.address = "Address is required";
+    }
+
+    setErrors(newErrors);
+
+    return Object.keys(newErrors).length === 0;
+  };
 
   const changeHandler = (e) => {
     setFormData({
@@ -37,6 +73,11 @@ const Signup = () => {
 
   const submitHandler = (e) => {
     e.preventDefault();
+
+    if (!validateForm()) {
+      toast.error("Please fix the errors");
+      return;
+    }
 
     axios
       .post("http://localhost:3000/user/signup", formData, {
@@ -243,9 +284,9 @@ const Signup = () => {
                   }}
                 />
               </Box>
-
+               <BackButton/>
               {/* Heading */}
-
+  
               <Box mb={3}>
                 <Typography
                   variant="h4"
@@ -281,6 +322,8 @@ const Signup = () => {
                   onChange={changeHandler}
                   margin="normal"
                   required
+                  error={Boolean(errors.name)}
+                  helperText={errors.name}
                   sx={{
                     "& .MuiOutlinedInput-root.Mui-focused fieldset": {
                       borderColor: "#029FFE",
@@ -302,6 +345,8 @@ const Signup = () => {
                   onChange={changeHandler}
                   margin="normal"
                   required
+                  error={Boolean(errors.email)}
+                  helperText={errors.email}
                   sx={{
                     "& .MuiOutlinedInput-root.Mui-focused fieldset": {
                       borderColor: "#029FFE",
@@ -322,6 +367,8 @@ const Signup = () => {
                     value={formData.password}
                     onChange={changeHandler}
                     required
+                     error={Boolean(errors.password)}
+                     helperText={errors.password}
                   />
 
                   <button
@@ -353,6 +400,11 @@ const Signup = () => {
                   value={formData.phone}
                   onChange={changeHandler}
                   margin="normal"
+                   error={Boolean(errors.phone)}
+                  helperText={errors.phone}
+                  inputProps={{
+                    maxLength: 10
+                  }}
                   sx={{
                     "& .MuiOutlinedInput-root.Mui-focused fieldset": {
                       borderColor: "#029FFE",
@@ -374,6 +426,7 @@ const Signup = () => {
                   margin="normal"
                   multiline
                   rows={2}
+                  
                   sx={{
                     "& .MuiOutlinedInput-root.Mui-focused fieldset": {
                       borderColor: "#029FFE",

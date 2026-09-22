@@ -873,7 +873,7 @@ const Profile = () => {
               </Typography>
 
               <Button
-                onClick={() => navigate("/sell")}
+                onClick={() => navigate("/productinsert")}
                 sx={{
                   mt: 3,
                   px: 4,
